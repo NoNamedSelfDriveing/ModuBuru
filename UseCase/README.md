@@ -53,15 +53,15 @@ Use Case
 
 1.	걸린 토지의 토지 카드를 찍는다.
 
-![2. 벌금이 현재 소유액보다 높으면 부동산 판매 창으로 넘어간다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_2.md)
+![2. 벌금이 현재 소유액보다 높으면 부동산 판매 창으로 넘어간다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/%ED%8C%8C%EC%82%B0/%EB%B6%80%EB%8F%99%EC%82%B0_%ED%8C%90%EB%A7%A4_2.md)
 
-![3. 자신이 소유한 부동산 목록을 선택하고 판매한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_3.md)
+![3. 자신이 소유한 부동산 목록을 선택하고 판매한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/%ED%8C%8C%EC%82%B0/%EB%B6%80%EB%8F%99%EC%82%B0_%ED%8C%90%EB%A7%A4_3.md)
 
 4.. 선택한 목록들의 총액이 벌금보다 높으면 판매 버튼을 누른다.
 
-![5. 플레이어 부동산 목록에 판매된 목록을 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_5.md)
+![5. 플레이어 부동산 목록에 판매된 목록을 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/%ED%8C%8C%EC%82%B0/%EB%B6%80%EB%8F%99%EC%82%B0_%ED%8C%90%EB%A7%A4_5.md)
 
-![6. 첫 번째로, 벌금만큼 돈이 인출된다.(이는 걸린 토지 소유자에게 전달)](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_6.md)
+![6. 첫 번째로, 벌금만큼 돈이 인출된다.(이는 걸린 토지 소유자에게 전달)](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/%ED%8C%8C%EC%82%B0/%EB%B6%80%EB%8F%99%EC%82%B0_%ED%8C%90%EB%A7%A4_6.md)
 
 7.. 두 번째로, 벌금을 제외한 나머지 잔액을 인출한다.
 
@@ -73,6 +73,6 @@ Use Case
 
 3.	파산 신청 버튼을 누른다.
 
-![4. 해당 플레이어의 부동산 목록이 모두 무소유 토지로 변환된다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산신청_4.md)
+![4. 해당 플레이어의 부동산 목록이 모두 무소유 토지로 변환된다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산/파산신청_5.md)
 
-![5. 해당 플레이어의 데이터베이스를 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산신청_5.md)
+![5. 해당 플레이어의 데이터베이스를 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/%ED%8C%8C%EC%82%B0/%ED%8C%8C%EC%82%B0%EC%8B%A0%EC%B2%AD_5.md)
