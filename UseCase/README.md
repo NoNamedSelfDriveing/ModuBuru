@@ -57,9 +57,9 @@ Use Case
 
 ![3. 자신이 소유한 부동산 목록을 선택하고 판매한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_3.md)
 
-1.	선택한 목록들의 총액이 벌금보다 높으면 판매 버튼을 누른다.
+4.. 선택한 목록들의 총액이 벌금보다 높으면 판매 버튼을 누른다.
 
-**5. 플레이어 부동산 목록에 판매된 목록을 삭제한다.**
+![5. 플레이어 부동산 목록에 판매된 목록을 삭제한다.]((https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_5.md)
 
 **6. 첫 번째로, 벌금만큼 돈이 인출된다.(이는 걸린 토지 소유자에게 전달)**
 
