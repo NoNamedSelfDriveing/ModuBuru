@@ -5,9 +5,9 @@ Use Case
 
 1.	보드와 게임 말을 세팅 후 기기에 전원을 켠다.
 
-![2.기기에 게임 플레이할 인원 수를 입력한다.](https://github.com/NoNamedSelfDriveing/ModuBuru/detailed/게임시작/2.md)
+![2.기기에 게임 플레이할 인원 수를 입력한다.](https://github.com/NoNamedSelfDriveing/ModuBuru/blob/master/detailed/%EA%B2%8C%EC%9E%84%EC%8B%9C%EC%9E%91/2.md)
 
-![3.기기에서는 각 인원마다 일정량의 돈을 분배한다.](https://github.com/NoNamedSelfDriveing/ModuBuru/detailed/게임시작/3.md)
+![3.기기에서는 각 인원마다 일정량의 돈을 분배한다.](https://github.com/NoNamedSelfDriveing/ModuBuru/blob/master/detailed/%EA%B2%8C%EC%9E%84%EC%8B%9C%EC%9E%91/3.md)
 
 
 ### 건물 구입
