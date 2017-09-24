@@ -55,7 +55,7 @@ Use Case
 
 ![2. 벌금이 현재 소유액보다 높으면 부동산 판매 창으로 넘어간다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_2.md)
 
-**3. 자신이 소유한 부동산 목록을 선택하고 판매한다.**
+![3. 자신이 소유한 부동산 목록을 선택하고 판매한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_3.md)
 
 1.	선택한 목록들의 총액이 벌금보다 높으면 판매 버튼을 누른다.
 
