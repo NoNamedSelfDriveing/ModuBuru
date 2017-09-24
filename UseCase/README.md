@@ -29,7 +29,7 @@ Use Case
 
 3.	그렇지 않을 경우, 토지 구입 시퀀스로 넘어간다.
 
-![4. 지불할 액수가 디스플레이에 나오고 그 액수 만큼 돈을 넣는다. (Connected with No. 2)](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_2.md)
+![4. 지불할 액수가 디스플레이에 나오고 그 액수 만큼 돈을 넣는다. (Connected with No. 2)](https://github.com/MagmaTart/ModuBuru/blob/master/detailed/4.md)
 
 1.	턴을 넘기고, 상황을 종료한다.
 
@@ -53,7 +53,7 @@ Use Case
 
 1.	걸린 토지의 토지 카드를 찍는다.
 
-![2. 벌금이 현재 소유액보다 높으면 부동산 판매 창으로 넘어간다.](https://github.com/SongKJ/ModuBuru/detailed/sell_realty_2.md)
+![2. 벌금이 현재 소유액보다 높으면 부동산 판매 창으로 넘어간다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_2.md)
 
 **3. 자신이 소유한 부동산 목록을 선택하고 판매한다.**
 
