@@ -73,6 +73,6 @@ Use Case
 
 3.	파산 신청 버튼을 누른다.
 
-![4. 해당 플레이어의 부동산 목록이 모두 무소유 토지로 변환된다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산/파산신청_5.md)
+![4. 해당 플레이어의 부동산 목록이 모두 무소유 토지로 변환된다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산/파산신청_4.md)
 
 ![5. 해당 플레이어의 데이터베이스를 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/%ED%8C%8C%EC%82%B0/%ED%8C%8C%EC%82%B0%EC%8B%A0%EC%B2%AD_5.md)
