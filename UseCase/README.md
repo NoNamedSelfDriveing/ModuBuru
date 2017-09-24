@@ -11,15 +11,15 @@ Use Case
 
 ![1. 건물을 구입하려는 토지 카드의 바코드를 인식시킨다.](https://github.com/MagmaTart/ModuBuru/blob/master/detailed/1.md)
 
-1.	토지 또는 원하는 만큼의 건물별 개수를 선택한다.
+2.. 토지 또는 원하는 만큼의 건물별 개수를 선택한다.
 
 ![3. 디스플레이에 표시된 건물의 가격만큼 기기에 돈을 넣는다.](https://github.com/MagmaTart/ModuBuru/blob/master/detailed/2.md)
 
-1.	투입된 금액을 디스플레이에 표시한다.
+4.. 투입된 금액을 디스플레이에 표시한다.
 
 ![5. 투입된 금액이 건물 가격 이상이면 건물 서랍을 연다.](https://github.com/MagmaTart/ModuBuru/blob/master/detailed/3.md)
 
-1.	잔액을 반환한다.
+6.. 잔액을 반환한다.
 
 ### 통행료 지불
 
@@ -31,7 +31,7 @@ Use Case
 
 ![4. 지불할 액수가 디스플레이에 나오고 그 액수 만큼 돈을 넣는다. (Connected with No. 2)](https://github.com/MagmaTart/ModuBuru/blob/master/detailed/4.md)
 
-1.	턴을 넘기고, 상황을 종료한다.
+5.. 턴을 넘기고, 상황을 종료한다.
 
 ### 황금열쇠 사용
 
@@ -45,9 +45,9 @@ Use Case
 
 **5. 해당 황금 열쇠가 지폐의 이동을 일으키는 카드일 경우, 디스플레이에 그 카드를 처리하기 위한 화면이 뜬다.**
 
-1.	해당 황금 열쇠에 맞춰서 지폐의 투입 또는 인출을 수행한다.
+6.. 해당 황금 열쇠에 맞춰서 지폐의 투입 또는 인출을 수행한다.
 
-2.	상황을 종료하고, 턴을 다음 사용자로 넘긴다.
+7.. 상황을 종료하고, 턴을 다음 사용자로 넘긴다.
 
 ### 파산 - 부동산 판매
 
@@ -61,9 +61,9 @@ Use Case
 
 ![5. 플레이어 부동산 목록에 판매된 목록을 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_5.md)
 
-**6. 첫 번째로, 벌금만큼 돈이 인출된다.(이는 걸린 토지 소유자에게 전달)**
+![6. 첫 번째로, 벌금만큼 돈이 인출된다.(이는 걸린 토지 소유자에게 전달)](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/sell_realty_6.md)
 
-1.	두 번째로, 벌금을 제외한 나머지 잔액을 인출한다.
+7.. 두 번째로, 벌금을 제외한 나머지 잔액을 인출한다.
 
 ### 파산 - 파산 인정
 
