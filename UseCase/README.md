@@ -75,4 +75,4 @@ Use Case
 
 ![4. 해당 플레이어의 부동산 목록이 모두 무소유 토지로 변환된다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산신청_4.md)
 
-**5. 해당 플레이어의 데이터베이스를 삭제한다.**
+![5. 해당 플레이어의 데이터베이스를 삭제한다.](https://github.com/SongKJ00/ModuBuru/blob/master/detailed/파산신청_5.md)
