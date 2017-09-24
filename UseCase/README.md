@@ -28,7 +28,7 @@
 
 3. 그렇지 않을 경우, 토지 구입 시퀀스로 넘어간다.
 
-![4. 지불할 액수가 디스플레이에 나오고 그 액수 만큼 돈을 넣는다. (Connected with No. 2)]((https://github.com/MagmaTart/ModuBuru/blob/master/detailed/4.md)
+![4. 지불할 액수가 디스플레이에 나오고 그 액수 만큼 돈을 넣는다. (Connected with No. 2)](https://github.com/MagmaTart/ModuBuru/blob/master/detailed/4.md)
 
 5. 턴을 넘기고, 상황을 종료한다.
 
