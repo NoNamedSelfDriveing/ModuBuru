@@ -8,7 +8,7 @@ class GameStart(QtGui.QMainWindow):
         self.setWindowTitle('Game Start!')
         self.setBackground()
 
-        self.playerNum = '2명'  # 플레이어 인원 기본 2명으로 초기화
+        self.playerNum = 2  # 플레이어 인원 기본 2명으로 초기화
 
         # 플레이어 선택 label 
         lblPlayerNum = QtGui.QLabel('인원을 선택해주세요', self)
@@ -41,12 +41,15 @@ class GameStart(QtGui.QMainWindow):
 
     # 플레이어 인원 선택 comboBox method
     def player_num_choice(self, player_num):
-        self.playerNum = player_num
-        print(self.playerNum)
+        self.playerNum = int(player_num[0])
+        #print(self.playerNum)
 
     # 플레이어 인원 결정 PushButton method
     def player_num_decide(self):
-        print(self.playerNum)
+        #print(self.playerNum)
+        f = open('information.txt', 'w')
+        f.write('player_num=%d\n' % self.playerNum)
+        f.close()
         sys.exit()
 
 
@@ -58,7 +61,7 @@ class Board(QtGui.QFrame):
 
     # window background 변경 method
     def initBoard(self):
-        self.setStyleSheet('background-image: url("image/game_start_bg.jpg")')
+        self.setStyleSheet('background-image: url("../image/game_start_bg.jpg")')
 
 
 def run():
