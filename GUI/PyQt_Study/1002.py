@@ -6,7 +6,7 @@ class Window(QtGui.QMainWindow):
         super(Window, self).__init__()
         self.setGeometry(50, 50, 500, 300)
         self.setWindowTitle("Test!")
-        self.setWindowIcon(QtGui.QIcon('/usr/share/pixel-wallpaper/road.jpg'))
+        #self.setWindowIcon(QtGui.QIcon('/usr/share/pixel-wallpaper/road.jpg'))
 
         # 액션object 생성 및  네임 설정
         extractAction = QtGui.QAction("&exit", self)
