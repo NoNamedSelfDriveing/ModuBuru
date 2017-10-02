@@ -42,11 +42,10 @@ class GameStart(QtGui.QMainWindow):
     # 플레이어 인원 선택 comboBox method
     def player_num_choice(self, player_num):
         self.playerNum = int(player_num[0])
-        #print(self.playerNum)
 
     # 플레이어 인원 결정 PushButton method
     def player_num_decide(self):
-        #print(self.playerNum)
+        # information.txt에 플레이어 인원수 저장
         f = open('information.txt', 'w')
         f.write('player_num=%d\n' % self.playerNum)
         f.close()
@@ -66,7 +65,7 @@ class Board(QtGui.QFrame):
 
 def run():
     app = QtGui.QApplication([])
-    GUI = GameStart()
+    window = GameStart()
     app.exec_()
 
 run()
