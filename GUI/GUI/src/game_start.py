@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt4 import QtGui, QtCore
 
 class GameStart(QtGui.QMainWindow):
@@ -12,25 +13,26 @@ class GameStart(QtGui.QMainWindow):
 
         # 플레이어 선택 label 
         lblPlayerNum = QtGui.QLabel('인원을 선택해주세요', self)
-        lblPlayerNum.setFont(QtGui.QFont('SansSerif', 40, QtGui.QFont.Bold))
+        lblPlayerNum.setFont(QtGui.QFont('SansSerif', 80, QtGui.QFont.Bold))
         lblPlayerNum.resize(lblPlayerNum.sizeHint())
-        lblPlayerNum.move(400, 220)
+        lblPlayerNum.move(150, 150)
 
         # 플레이어 선택comboBox
         cmbPlayerNum = QtGui.QComboBox(self)
-        cmbPlayerNum.setFont(QtGui.QFont('SansSerif', 15, QtGui.QFont.Bold))
+        cmbPlayerNum.setFont(QtGui.QFont('SansSerif', 70, QtGui.QFont.Bold))
         cmbPlayerNum.addItem('2명')
         cmbPlayerNum.addItem('3명')
         cmbPlayerNum.addItem('4명')
-        cmbPlayerNum.resize(200, 80)
-        cmbPlayerNum.move(430, 400)
+        cmbPlayerNum.resize(250, 150)
+        cmbPlayerNum.move(300, 400)
         cmbPlayerNum.activated[str].connect(self.player_num_choice)
 
         # 플레이어 인원 결정 버튼
         btnPlayerNum = QtGui.QPushButton('OK', self)
-        btnPlayerNum.clicked.connect(self.player_num_decide)
-        btnPlayerNum.resize(100, 80)
+        btnPlayerNum.setFont(QtGui.QFont('SansSerif', 70, QtGui.QFont.Bold))
+        btnPlayerNum.resize(200, 150)
         btnPlayerNum.move(700, 400)
+        btnPlayerNum.clicked.connect(self.player_num_decide)
 
         self.show()
 
@@ -49,6 +51,7 @@ class GameStart(QtGui.QMainWindow):
         f = open('information.txt', 'w')
         f.write('player_num=%d\n' % self.playerNum)
         f.close()
+        os.system('python3 home.py')    # 메인 screen인 home.py 실행
         sys.exit()
 
 
