@@ -18,6 +18,7 @@ class Home(QtGui.QMainWindow):
         super(Home, self).__init__()
         self.setGeometry(0, 0, 1280, 720)
         self.setWindowTitle('Home')
+        self.set_background()
 
         # Font Object
         boldFont = QtGui.QFont('SansSerif', 20, QtGui.QFont.Bold)
@@ -83,6 +84,11 @@ class Home(QtGui.QMainWindow):
 
         self.show()
 
+    # 배경 설정 method
+    def set_background(self):
+        self.theBoard = Board(self)
+        self.setCentralWidget(self.theBoard)
+
     # 플레이어 리스트 설정 method
     def set_player_list(self):
         self.nowPlayerNum = 0    # 현재 플레이어가 몇 번째 플레이어인지 저장할 변수 
@@ -119,6 +125,14 @@ class Home(QtGui.QMainWindow):
         self.lblNowPlayerRealtyValue.setText('￦ %s' % playerList[self.nowPlayerNum].realtyValue)
 
         self.txtBarcode.setFocus()    #바코드 정보 입력 textbox로 포커스 이동
+
+# window background class
+class Board(QtGui.QFrame):
+    def __init__(self, parent):
+        super(Board, self).__init__(parent)
+        self.init_board()
+    def init_board(self):
+        self.setStyleSheet('background-image: url("../image/game_start_bg.jpg")')
 
 def run():
     app = QtGui.QApplication([])

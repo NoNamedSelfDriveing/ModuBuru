@@ -16,9 +16,9 @@ class GameStart(QtGui.QMainWindow):
         lblPlayerNum.resize(lblPlayerNum.sizeHint())
         lblPlayerNum.move(400, 220)
 
-        # 플레이어 선택checkBox
-
+        # 플레이어 선택comboBox
         cmbPlayerNum = QtGui.QComboBox(self)
+        cmbPlayerNum.setFont(QtGui.QFont('SansSerif', 15, QtGui.QFont.Bold))
         cmbPlayerNum.addItem('2명')
         cmbPlayerNum.addItem('3명')
         cmbPlayerNum.addItem('4명')
@@ -56,10 +56,10 @@ class GameStart(QtGui.QMainWindow):
 class Board(QtGui.QFrame):
     def __init__(self, parent):
         super(Board, self).__init__(parent)
-        self.initBoard()
+        self.init_board()
 
     # window background 변경 method
-    def initBoard(self):
+    def init_board(self):
         self.setStyleSheet('background-image: url("../image/game_start_bg.jpg")')
 
 
