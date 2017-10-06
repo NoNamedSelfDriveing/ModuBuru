@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt4 import QtGui
 
 playerList = []
@@ -21,63 +22,65 @@ class Home(QtGui.QMainWindow):
         self.set_background()
 
         # Font Object
-        boldFont = QtGui.QFont('SansSerif', 20, QtGui.QFont.Bold)
-        noBoldFont = QtGui.QFont('SansSerif', 20)
+        boldFont = QtGui.QFont('SansSerif', 50, QtGui.QFont.Bold)
+        noBoldFont = QtGui.QFont('SansSerif', 50)
 
         # 'Now Turn' 텍스트 표시 Label
         lblNowTurn = QtGui.QLabel('Now Turn', self)
         lblNowTurn.setFont(boldFont)
         lblNowTurn.resize(lblNowTurn.sizeHint())
-        lblNowTurn.move(100, 100)
+        lblNowTurn.move(50, 50)
 
         # 현재 턴의 플레이어 이름 띄울 Label
         self.lblNowPlayerName = QtGui.QLabel('', self)
         self.lblNowPlayerName.setFont(noBoldFont)
         self.lblNowPlayerName.resize(self.lblNowPlayerName.sizeHint())
-        self.lblNowPlayerName.move(300, 100)
+        self.lblNowPlayerName.move(450, 50)
 
         # 순서를 다음 턴으로 넘길 PushButton
-        btnChangeTurn = QtGui.QPushButton('Next Turn', self)
+        btnChangeTurn = QtGui.QPushButton('Next\nTurn', self)
         btnChangeTurn.setFont(boldFont)
         btnChangeTurn.clicked.connect(self.change_turn)
-        btnChangeTurn.resize(200, 100)
-        btnChangeTurn.move(900, 100)
+        btnChangeTurn.resize(250, 200)
+        btnChangeTurn.move(1000, 270)
 
         # '현금 소유액' 텍스트 표시 Label
         lblNowCash = QtGui.QLabel('현금 소유액', self)
         lblNowCash.setFont(boldFont)
         lblNowCash.resize(lblNowCash.sizeHint())
-        lblNowCash.move(100, 200)
+        lblNowCash.move(50, 200)
 
         # 현재 턴의 플레이어 현금 소유액 띄울 Label
         self.lblNowPlayerCash = QtGui.QLabel('', self)
         self.lblNowPlayerCash.setFont(noBoldFont)
         self.lblNowPlayerCash.resize(self.lblNowPlayerCash.sizeHint())
-        self.lblNowPlayerCash.move(300, 200)
+        self.lblNowPlayerCash.move(450, 200)
 
         # '부동산 가치' 텍스트 띄울 Label
         lblRealtyValue = QtGui.QLabel('부동산 가치', self)
         lblRealtyValue.setFont(boldFont)
         lblRealtyValue.resize(lblRealtyValue.sizeHint())
-        lblRealtyValue.move(100, 300)
+        lblRealtyValue.move(50, 350)
 
         # 현재 턴의 플레이어 부동산 가치 띄울 Label
         self.lblNowPlayerRealtyValue = QtGui.QLabel('', self)
         self.lblNowPlayerRealtyValue.setFont(noBoldFont)
         self.lblNowPlayerRealtyValue.resize(self.lblNowPlayerRealtyValue.sizeHint())
-        self.lblNowPlayerRealtyValue.move(300, 300)
+        self.lblNowPlayerRealtyValue.move(450, 350)
 
         # '바코드 입력' 텍스트 띄울 Label
         lblBarcodeInput = QtGui.QLabel('바코드 입력', self)
         lblBarcodeInput.setFont(boldFont)
         lblBarcodeInput.resize(lblBarcodeInput.sizeHint())
-        lblBarcodeInput.move(350, 500)
+        lblBarcodeInput.move(200, 500)
 
         # 바코드 정보 입력할 textbox
-        self.txtBarcode = QtGui.QLineEdit(self)
-        self.txtBarcode.resize(300, 40)
-        self.txtBarcode.move(530, 500)
-        self.txtBarcode.setFocus()
+        self.edtBarcodeInfo = QtGui.QLineEdit(self)
+        self.edtBarcodeInfo.setFont(QtGui.QFont('SansSerif', 30))
+        self.edtBarcodeInfo.resize(400, 100)
+        self.edtBarcodeInfo.move(600, 500)
+        self.edtBarcodeInfo.setFocus()
+        self.edtBarcodeInfo.returnPressed.connect(self.enter_pressed)
 
         # 플레이어 리스트 설정하기
         self.set_player_list()
@@ -124,7 +127,11 @@ class Home(QtGui.QMainWindow):
         self.lblNowPlayerCash.setText('￦ %s' % playerList[self.nowPlayerNum].cash)
         self.lblNowPlayerRealtyValue.setText('￦ %s' % playerList[self.nowPlayerNum].realtyValue)
 
-        self.txtBarcode.setFocus()    #바코드 정보 입력 textbox로 포커스 이동
+        self.edtBarcodeInfo.setFocus()    #바코드 정보 입력 textbox로 포커스 이동
+
+    # 바코드 입력 QLineEdit에 엔터 키 입력 이벤트 method
+    def enter_pressed(self):
+        os.system('python3 building.py')
 
 # window background class
 class Board(QtGui.QFrame):
