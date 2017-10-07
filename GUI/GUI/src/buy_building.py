@@ -1,5 +1,6 @@
 import sys
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
+from functools import partial
 
 class Building(QtGui.QMainWindow):
     boldFont = QtGui.QFont('SansSerif', 80, QtGui.QFont.Bold)
@@ -18,28 +19,32 @@ class Building(QtGui.QMainWindow):
         lblSelect.move(90, 70)
 
         # '별장 1' 선택 CheckBox
-        chkVilla1 = QtGui.QCheckBox('별장 1', self)
-        chkVilla1.setFont(Building.boldFont)
-        chkVilla1.resize(400, 150)
-        chkVilla1.move(50, 220)
+        self.chkVilla1 = QtGui.QCheckBox('별장 1', self)
+        self.chkVilla1.stateChanged.connect(partial(self.show_selected, self.chkVilla1.text()))
+        self.chkVilla1.setFont(Building.boldFont)
+        self.chkVilla1.resize(400, 150)
+        self.chkVilla1.move(50, 220)
 
         # '별장 2' 선택 CheckBox
-        chkVilla2 = QtGui.QCheckBox('별장 2', self)
-        chkVilla2.setFont(Building.boldFont)
-        chkVilla2.resize(400, 150)
-        chkVilla2.move(50, 470)
+        self.chkVilla2 = QtGui.QCheckBox('별장 2', self)
+        self.chkVilla2.stateChanged.connect(partial(self.show_selected, self.chkVilla2.text()))
+        self.chkVilla2.setFont(Building.boldFont)
+        self.chkVilla2.resize(400, 150)
+        self.chkVilla2.move(50, 470)
 
         # '빌딩' 선택 CheckBox
-        chkBuilding = QtGui.QCheckBox('빌딩', self)
-        chkBuilding.setFont(Building.boldFont)
-        chkBuilding.resize(400, 150)
-        chkBuilding.move(450, 220)
+        self.chkBuilding = QtGui.QCheckBox('빌딩', self)
+        self.chkBuilding.stateChanged.connect(partial(self.show_selected, self.chkBuilding.text()))
+        self.chkBuilding.setFont(Building.boldFont)
+        self.chkBuilding.resize(400, 150)
+        self.chkBuilding.move(450, 220)
 
         # '호텔' 선택 CheckBox
-        chkHotel = QtGui.QCheckBox('호텔', self)
-        chkHotel.setFont(Building.boldFont)
-        chkHotel.resize(400, 150)
-        chkHotel.move(450, 470)
+        self.chkHotel = QtGui.QCheckBox('호텔', self)
+        self.chkHotel.stateChanged.connect(partial(self.show_selected, self.chkHotel.text()))
+        self.chkHotel.setFont(Building.boldFont)
+        self.chkHotel.resize(400, 150)
+        self.chkHotel.move(450, 470)
 
         # '선택한 건물' 텍스트 띄울 Label
         lblSelectedTxt = QtGui.QLabel('선택한 건물', self)
@@ -48,11 +53,11 @@ class Building(QtGui.QMainWindow):
         lblSelectedTxt.move(840, 20)
 
         # 선택한 건물 표시할 Label
-        lblSelected = QtGui.QLabel(self)
-        lblSelected.setFont(QtGui.QFont('SansSerif', 50))
-        lblSelected.resize(200, 80)
-        lblSelected.move(930, 140)
-        lblSelected.setText('별장 1')
+        self.lblSelected = QtGui.QLabel(self)
+        self.lblSelected.setFont(QtGui.QFont('SansSerif', 50))
+        self.lblSelected.resize(200, 80)
+        self.lblSelected.move(930, 140)
+        #lblSelected.setText('별장 1')
 
         # '금액' 텍스트 띄울 Label
         lblPriceTxt = QtGui.QLabel('금액', self)
@@ -69,6 +74,7 @@ class Building(QtGui.QMainWindow):
 
         # 구매 완료할 PushButton
         btnOK = QtGui.QPushButton('완료', self)
+        btnOK.clicked.connect(self.close_window)
         btnOK.setFont(QtGui.QFont('SansSerif', 50, QtGui.QFont.Bold))
         btnOK.resize(200, 200)
         btnOK.move(920, 470)
@@ -79,6 +85,24 @@ class Building(QtGui.QMainWindow):
     def setBackground(self):
         self.theBoard = Board(self)
         self.setCentralWidget(self.theBoard)
+
+    # 선택한 건물 표시 method
+    def show_selected(self, text, state):
+        checkBoxList = [self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
+        if state == QtCore.Qt.Checked:
+            for checkBox in checkBoxList:
+                if checkBox.text() != text:
+                    checkBox.setEnabled(False)
+
+            self.lblSelected.setText(text)
+        else:
+            for checkBox in checkBoxList:
+                checkBox.setEnabled(True)
+            self.lblSelected.setText('')
+
+    # 현재 window 닫는 method
+    def close_window(self):
+        sys.exit()
 
 # 배경 설정 Class
 class Board(QtGui.QFrame):

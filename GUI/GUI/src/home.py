@@ -131,7 +131,8 @@ class Home(QtGui.QMainWindow):
 
     # 바코드 입력 QLineEdit에 엔터 키 입력 이벤트 method
     def enter_pressed(self):
-        os.system('python3 building.py')
+        os.system('python3 buy_building.py')
+        self.edtBarcodeInfo.setText('')
 
 # window background class
 class Board(QtGui.QFrame):
@@ -139,7 +140,7 @@ class Board(QtGui.QFrame):
         super(Board, self).__init__(parent)
         self.init_board()
     def init_board(self):
-        self.setStyleSheet('background-image: url("../image/game_start_bg.jpg")')
+        self.setStyleSheet('background-image: url("../image/green.png")')
 
 def run():
     app = QtGui.QApplication([])
