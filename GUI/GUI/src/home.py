@@ -1,5 +1,6 @@
 import sys
 import os
+import csv
 from PyQt4 import QtGui
 
 playerList = []
@@ -131,7 +132,22 @@ class Home(QtGui.QMainWindow):
 
     # 바코드 입력 QLineEdit에 엔터 키 입력 이벤트 method
     def enter_pressed(self):
-        os.system('python3 buy_building.py')
+        landNameColumn = 2
+        landCodeColumn = 3
+        landName = self.edtBarcodeInfo.text()
+
+        f = open('./realty_info.csv', 'r')
+        csvReader = csv.reader(f)
+        for col in csvReader:
+            if col[landNameColumn] == landName:
+                # 부가 건물이 있는 땅이면
+                if col[landCodeColumn] == '1':
+                    os.system('python3 buy_realty_with_building.py %s' % landName)
+                # 부가 건물이 없는 땅이면
+                elif col[landCodeColumn] == '0':
+                    os.system('python3 buy_realty_without_building.py %s' % landName)
+                break
+
         self.edtBarcodeInfo.setText('')
 
 # window background class
