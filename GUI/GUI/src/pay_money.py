@@ -45,7 +45,7 @@ class PayMoney(QtGui.QMainWindow):
 
     # 초기 잔여 금액 표시 method
     def show_initial_remain_money(self):
-        landNameColumn = 2
+        '''landNameColumn = 2
         landPriceColumn = 5
         f = open('./realty_info.csv', 'r')
         csvReader = csv.reader(f)
@@ -53,6 +53,8 @@ class PayMoney(QtGui.QMainWindow):
             if col[landNameColumn] == sys.argv[1]:
                 self.lblRemainMoney.setText('￦ %s' %col[landPriceColumn])
                 break
+        '''
+        self.lblRemainMoney.setText('￦ %s' % sys.argv[1])
 
 # 배경 설정 class
 class BackGround(QtGui.QFrame):
