@@ -156,7 +156,7 @@ class Board(QtGui.QFrame):
         super(Board, self).__init__(parent)
         self.init_board()
     def init_board(self):
-        self.setStyleSheet('background-image: url("../image/green.png")')
+        self.setStyleSheet('background-image: url("../image/blue_marble.jpg")')
 
 def run():
     app = QtGui.QApplication([])

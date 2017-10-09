@@ -63,7 +63,7 @@ class Board(QtGui.QFrame):
 
     # window background 변경 method
     def init_board(self):
-        self.setStyleSheet('background-image: url("../image/game_start_bg.jpg")')
+        self.setStyleSheet('background-image: url("../image/blue_marble.jpg")')
 
 
 def run():
