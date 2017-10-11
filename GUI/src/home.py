@@ -73,13 +73,13 @@ class Home(QtGui.QMainWindow):
         lblBarcodeInput = QtGui.QLabel('바코드 입력', self)
         lblBarcodeInput.setFont(boldFont)
         lblBarcodeInput.resize(lblBarcodeInput.sizeHint())
-        lblBarcodeInput.move(200, 500)
+        lblBarcodeInput.move(200, 550)
 
         # 바코드 정보 입력할 textbox
         self.edtBarcodeInfo = QtGui.QLineEdit(self)
         self.edtBarcodeInfo.setFont(QtGui.QFont('SansSerif', 30))
-        self.edtBarcodeInfo.resize(400, 100)
-        self.edtBarcodeInfo.move(600, 500)
+        self.edtBarcodeInfo.resize(300, 100)
+        self.edtBarcodeInfo.move(600, 550)
         self.edtBarcodeInfo.setFocus()
         self.edtBarcodeInfo.returnPressed.connect(self.enter_pressed)
 
@@ -97,11 +97,12 @@ class Home(QtGui.QMainWindow):
     def set_player_list(self):
         self.nowPlayerNum = 0    # 현재 플레이어가 몇 번째 플레이어인지 저장할 변수 
 
-        # information.txt 읽어서 플레이이 인원 수 구하기
-        f = open('information.txt', 'r')
-        line = f.readline()
-        self.player_num = int(line[line.find('=')+1])  # 'player_num=' 다음 오는 인원 가져오기
-        f.close()
+        # 플레이이 인원 수 구하기
+        #f = open('information.txt', 'r')
+        #line = f.readline()
+        #self.player_num = int(line[line.find('=')+1])  # 'player_num=' 다음 오는 인원 가져오기
+        #f.close()
+        self.player_num = int(sys.argv[1])
 
         # 플레이어 리스트 설정하기
         # 플레이어 인원 수 만큼 Player 객체 배열로 생성
@@ -132,20 +133,21 @@ class Home(QtGui.QMainWindow):
 
     # 바코드 입력 QLineEdit에 엔터 키 입력 이벤트 method
     def enter_pressed(self):
+        landBarcodeColumn = 1
         landNameColumn = 2
         landCodeColumn = 3
-        landName = self.edtBarcodeInfo.text()
+        barcodeValue = self.edtBarcodeInfo.text()
 
         f = open('./realty_info.csv', 'r')
         csvReader = csv.reader(f)
         for col in csvReader:
-            if col[landNameColumn] == landName:
+            if col[landBarcodeColumn] == barcodeValue:
                 # 부가 건물이 있는 땅이면
                 if col[landCodeColumn] == '1':
-                    os.system('python3 buy_realty_with_building.py %s' % landName)
+                    os.system('python3 buy_realty_with_building.py %s' % col[landNameColumn])   # 실행 인자 : 땅 이름
                 # 부가 건물이 없는 땅이면
                 elif col[landCodeColumn] == '0':
-                    os.system('python3 buy_realty_without_building.py %s' % landName)
+                    os.system('python3 buy_realty_without_building.py %s' % col[landNameColumn])
                 break
 
         self.edtBarcodeInfo.setText('')

@@ -43,15 +43,12 @@ class GameStart(QtGui.QMainWindow):
 
     # 플레이어 인원 선택 comboBox method
     def player_num_choice(self, player_num):
-        self.playerNum = int(player_num[0])
+        self.playerNum = player_num[0]
 
     # 플레이어 인원 결정 PushButton method
     def player_num_decide(self):
-        # information.txt에 플레이어 인원수 저장
-        f = open('information.txt', 'w')
-        f.write('player_num=%d\n' % self.playerNum)
-        f.close()
-        os.system('python3 home.py')    # 메인 screen인 home.py 실행
+        # 플레이어 인원 수 인자로 넘기기
+        os.system('python3 give_initial_money.py %s' % self.playerNum)    # 메인 screen인 home.py 실행
         sys.exit()
 
 
