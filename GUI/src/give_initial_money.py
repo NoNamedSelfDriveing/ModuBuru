@@ -1,7 +1,7 @@
 import sys
 import os
 import time
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtTest
 
 class GiveInitialMoney(QtGui.QMainWindow):
     def __init__(self):
@@ -11,7 +11,7 @@ class GiveInitialMoney(QtGui.QMainWindow):
         self.set_background()
 
         # 텍스트 표시 메인 Label
-        self.lblMain = QtGui.QLabel('Hello', self)
+        self.lblMain = QtGui.QLabel(self)
         self.lblMain.setFont(QtGui.QFont('SansSerif', 33))
         self.lblMain.resize(750, 100)
         self.lblMain.move(50, 100)
@@ -33,12 +33,25 @@ class GiveInitialMoney(QtGui.QMainWindow):
 
     # 인출 시작 PushButton 클릭 이벤트 method, 돈 출력 시작
     def give_money(self):
-        playerNum = int(sys.argv[1])
+        playerNum = sys.argv[1]
         playerOrder = {'1' : '첫', '2' : '두','3' : '세', '4' : '네'}
 
         # 루틴 돌며 각각 플레이어 현급 출력
-        for i in range(1, playerNum+1):
+        for i in range(1, int(playerNum)+1):
             self.lblMain.setText('%s 번째 플레이어 현금 인출 중...' % playerOrder.get(str(i)))
+
+            '''
+                하드웨어 측에서 인출 작업 수행
+            '''
+
+            QtTest.QTest.qWait(2000)
+
+        self.lblMain.setText('인출이 완료되었습니다.')
+        QtTest.QTest.qWait(2000)
+
+        # home.py 실행, 플레이어 수 인자로 넘기기
+        os.system('python3 home.py %s' % playerNum)
+        sys.exit()
 
 # 배경 화면 설정 클래스
 class Background(QtGui.QFrame):
@@ -48,7 +61,6 @@ class Background(QtGui.QFrame):
 
     def init_background(self):
         self.setStyleSheet('background-image: url("../image/.png")')
-
 
 def run():
     app = QtGui.QApplication([])

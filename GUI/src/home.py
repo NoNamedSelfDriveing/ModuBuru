@@ -97,11 +97,12 @@ class Home(QtGui.QMainWindow):
     def set_player_list(self):
         self.nowPlayerNum = 0    # 현재 플레이어가 몇 번째 플레이어인지 저장할 변수 
 
-        # information.txt 읽어서 플레이이 인원 수 구하기
-        f = open('information.txt', 'r')
-        line = f.readline()
-        self.player_num = int(line[line.find('=')+1])  # 'player_num=' 다음 오는 인원 가져오기
-        f.close()
+        # 플레이이 인원 수 구하기
+        #f = open('information.txt', 'r')
+        #line = f.readline()
+        #self.player_num = int(line[line.find('=')+1])  # 'player_num=' 다음 오는 인원 가져오기
+        #f.close()
+        self.player_num = int(sys.argv[1])
 
         # 플레이어 리스트 설정하기
         # 플레이어 인원 수 만큼 Player 객체 배열로 생성
