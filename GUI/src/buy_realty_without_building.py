@@ -2,6 +2,7 @@ import sys
 import os
 import csv
 from PyQt4 import QtGui
+from functools import partial
 
 class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
     def __init__(self):
@@ -22,14 +23,15 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
         self.lblPrice.resize(750, 100)
         self.lblPrice.move(100, 300)
 
+        # 토지 가격 세팅
+        landPrice = self.show_price()
+
         # 구매 결정 PushButton
         self.btnOK = QtGui.QPushButton('구매', self)
-        self.btnOK.clicked.connect(self.pay_money)
+        self.btnOK.clicked.connect(partial(self.pay_money, landPrice))
         self.btnOK.setFont(QtGui.QFont('SansSerif', 50, QtGui.QFont.Bold))
         self.btnOK.resize(300, 300)
         self.btnOK.move(900, 350)
-
-        self.show_price()
 
         self.show()
 
@@ -49,9 +51,12 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
                 self.lblPrice.setText('￦ %s' %col[landPriceColumn])
                 break
 
+        return col[landPriceColumn]
+
     # 구매 버튼 클릭 이벤트 method
-    def pay_money(self):
-        os.system('python3 pay_money.py %s' % sys.argv[1])
+    def pay_money(self, landPrice):
+        print(landPrice)
+        os.system('python3 pay_money.py %s' % landPrice)
         sys.exit()
 
 # 배경 설정 class
