@@ -5,15 +5,45 @@ from PyQt4 import QtGui
 
 playerList = []
 
+# 부동산 관리 클래스
+class RealtyInfo:
+    realtyOwner = {}    # 각각 토지에 소유자 이름 저장
+    realtyBuildingNum = {}  # 각각 토지에 각 건물(빌라, 빌딩, 호텔) 수 저장
+
+    # 각각 토지에 소유자 이름 저장 딕셔너리, 각 건물 수 저장 딕셔너리 생성 및 초기화 method
+    # @classmethod
+    #def create_realty_dict(cls):
+    landNameColumn = 2
+    f = open('./realty_info.csv')
+    csvReader = csv.reader(f)
+
+    # 각각 토지 이름을 key 값으로 dictionary 생성 및 초기화 method
+    for row in csvReader:
+        realtyOwner[row[landNameColumn]] = ''
+        realtyBuildingNum[row[landNameColumn]] = {'villa' : 0, 'building' : 0, 'hotel' : 0}  # 각각 빌라, 빌딩, 호텔 수
+    f.close()
+
 # Player 정보 관리 클래스
 class Player:
     initialCash = ['4560000', '3680000', '2900000']
     playerCode = ['A', 'B', 'C', 'D']
     def __init__(self, totalNumOfPlayer, playerNum):
-        self.name = 'Player %s' % Player.playerCode[playerNum]
-        self.cash = Player.initialCash[totalNumOfPlayer-2]  # 2~4명인데 배열은 0번부터이므로 -2
-        self.realtyValue = '0'
-        self.realtyList = {}
+        self.nameCode = Player.playerCode[playerNum]   # 플레이어 이름 코드
+        self.name = 'Player %s' % Player.playerCode[playerNum]  # 플레이어 이름
+        self.cash = int(Player.initialCash[totalNumOfPlayer-2])  # 2~4명인데 배열은 0번부터이므로 -2
+        self.realtyValue = 0  # 플레이어 소유 부동산 가치
+        self.numOfBuilding = {'villa' : 0, 'building' : 0, 'hotel' : 0} # 플레이어가 가지고 있는 각 건물 수
+
+    # 플레이어의 소유 건물 수, 해당 토지의 건물 수 증가 method
+    def add_num_of_building(self, landName, buildingType, num):
+        self.numOfBuilding[buildingType] += num
+        RealtyInfo.realtyBuildingNum[landName][buildingType] += num
+        #print(self.numOfBuilding[buildingType])
+        #print(RealtyInfo.realtyBuildingNum[landName][buildingType])
+
+    # 벌금 지급 능력 없을 시 선택 부동산 청산 method
+    def remove_realty(self, realtyList):
+        pass
 
 class Home(QtGui.QMainWindow):
     def __init__(self):
@@ -86,6 +116,8 @@ class Home(QtGui.QMainWindow):
         # 플레이어 리스트 설정하기
         self.set_player_list()
 
+        #playerList[0].add_num_of_building('cairo', 'villa', 2)
+
         self.show()
 
     # 배경 설정 method
@@ -98,10 +130,6 @@ class Home(QtGui.QMainWindow):
         self.nowPlayerNum = 0    # 현재 플레이어가 몇 번째 플레이어인지 저장할 변수 
 
         # 플레이이 인원 수 구하기
-        #f = open('information.txt', 'r')
-        #line = f.readline()
-        #self.player_num = int(line[line.find('=')+1])  # 'player_num=' 다음 오는 인원 가져오기
-        #f.close()
         self.player_num = int(sys.argv[1])
 
         # 플레이어 리스트 설정하기
@@ -140,14 +168,14 @@ class Home(QtGui.QMainWindow):
 
         f = open('./realty_info.csv', 'r')
         csvReader = csv.reader(f)
-        for col in csvReader:
-            if col[landBarcodeColumn] == barcodeValue:
+        for row in csvReader:
+            if row[landBarcodeColumn] == barcodeValue:
                 # 부가 건물이 있는 땅이면
-                if col[landCodeColumn] == '1':
-                    os.system('python3 buy_realty_with_building.py %s' % col[landNameColumn])   # 실행 인자 : 땅 이름
+                if row[landCodeColumn] == '1':
+                    os.system('python3 buy_realty_with_building.py %s' % row[landNameColumn])   # 실행 인자 : 땅 이름
                 # 부가 건물이 없는 땅이면
-                elif col[landCodeColumn] == '0':
-                    os.system('python3 buy_realty_without_building.py %s' % col[landNameColumn])
+                elif row[landCodeColumn] == '0':
+                    os.system('python3 buy_realty_without_building.py %s' % row[landNameColumn])
                 break
 
         self.edtBarcodeInfo.setText('')
