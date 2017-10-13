@@ -4,6 +4,8 @@ import csv
 from PyQt4 import QtGui, QtCore
 from functools import partial
 
+numOfBuilding = {}
+
 class BuyRealtyWithBuilding(QtGui.QMainWindow):
     boldFont = QtGui.QFont('SansSerif', 80, QtGui.QFont.Bold)
     noBoldFont = QtGui.QFont('SansSerif', 20)
@@ -126,6 +128,8 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
 
     # 구매 버튼(OK) 버튼 클릭 이벤트 method
     def pay_money(self):
+        numOfBuilding['villa'] = 2
+        print(numOfBuilding['villa'])
         # 선택한 건물 금액 인자로 pay_money.py(돈 납부하는 기능) 실행
         os.system('python3 pay_money.py %s' % self.lblPrice.text()[2:])     # '￦ '를 제외한 뒷 금액을  인자로
         sys.exit()
@@ -143,4 +147,5 @@ def run():
     window = BuyRealtyWithBuilding()
     app.exec_()
 
-run()
+if __name__ == "__main__":
+    run()

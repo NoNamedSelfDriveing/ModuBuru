@@ -1,6 +1,7 @@
 import sys
 import os
 import csv
+#import buy_realty_with_building # 해당 모듈의 딕셔너리 키 값 읽어오기 실패
 from PyQt4 import QtGui
 
 playerList = []
@@ -179,6 +180,7 @@ class Home(QtGui.QMainWindow):
                 break
 
         self.edtBarcodeInfo.setText('')
+        print(buy_realty_with_building.numOfBuilding['villa'])  # 딕셔너리 key Error 발생
 
 # window background class
 class Board(QtGui.QFrame):
