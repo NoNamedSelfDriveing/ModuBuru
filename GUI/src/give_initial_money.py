@@ -33,8 +33,10 @@ class GiveInitialMoney(QtGui.QMainWindow):
 
     # 인출 시작 PushButton 클릭 이벤트 method, 돈 출력 시작
     def give_money(self):
-        playerNum = sys.argv[1]
+        playerNum = int(sys.argv[1])
         playerOrder = {'1' : '첫', '2' : '두','3' : '세', '4' : '네'}
+        initialCashList = ['4560000', '3680000', '2900000'] # 플레이어 수에 따른 초기 현금 지급액 리스트(각각 2명, 3명, 4명)
+        personalInitialCash = initialCashList[playerNum-2]    # 개인에게 지급되는 현금 (2~4명이므로 index는 0~2)
 
         # 루틴 돌며 각각 플레이어 현급 출력
         for i in range(1, int(playerNum)+1):
@@ -44,13 +46,13 @@ class GiveInitialMoney(QtGui.QMainWindow):
                 하드웨어 측에서 인출 작업 수행
             '''
 
-            QtTest.QTest.qWait(2000)
+            QtTest.QTest.qWait(2000)    # 2sec 대기
 
         self.lblMain.setText('인출이 완료되었습니다.')
         QtTest.QTest.qWait(2000)
 
         # home.py 실행, 플레이어 수 인자로 넘기기
-        os.system('python3 home.py %s' % playerNum)
+        os.system('python3 home.py %s' % str(playerNum))
         sys.exit()
 
 # 배경 화면 설정 클래스
