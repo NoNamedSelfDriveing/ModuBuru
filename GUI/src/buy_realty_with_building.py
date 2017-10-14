@@ -1,10 +1,11 @@
 import sys
 import os
 import csv
+import pickle
 from PyQt4 import QtGui, QtCore
 from functools import partial
 
-numOfBuilding = {}
+selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
 
 class BuyRealtyWithBuilding(QtGui.QMainWindow):
     boldFont = QtGui.QFont('SansSerif', 80, QtGui.QFont.Bold)
@@ -104,6 +105,9 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
         priceColumn = {self.chkLand.text() : 5, self.chkVilla1.text() : 6, self.chkVilla2.text() : 7, self.chkBuilding.text() : 8, self.chkHotel.text() : 9}
         checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
 
+        # 선택한 건물 개수 저장 dictionary
+        self.selectedNumOfBuilding = {}
+
         # 체크된 건물 확인 후 건물 이름 표시 및 가격 표시
         if state == QtCore.Qt.Checked:
             self.lblSelected.setText(text)
@@ -116,11 +120,35 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
                         if col[landNameColumn] == sys.argv[1]:
                             self.lblPrice.setText('￦ %s' % col[priceColumn.get(checkBox.text())] )
 
+                    # 선택 건물 개수 저장
+                    if text == '  땅':
+                        selectedNumOfBuilding['land'] = 1
+                    elif text == '빌라 1':
+                        selectedNumOfBuilding['villa'] = 1
+                    elif text == '빌라 2':
+                        selectedNumOfBuilding['villa'] = 2
+                    elif text == '빌딩':
+                        selectedNumOfBuilding['building'] = 1
+                    elif text == '호텔':
+                        selectedNumOfBuilding['hotel'] = 1
                 # 해당 사항 없는 체크박스 disabled
                 else:
                     checkBox.setEnabled(False)
 
+        # 체크 박스 체크 해제 시
         else:
+            # 선택 건물 개수 reset
+            if text == '  땅':
+                selectedNumOfBuilding['land'] = 0
+            elif text == '빌라 1':
+                selectedNumOfBuilding['villa'] = 0
+            elif text == '빌라 2':
+                selectedNumOfBuilding['villa'] = 0
+            elif text == '빌딩':
+                selectedNumOfBuilding['building'] = 0
+            elif text == '호텔':
+                selectedNumOfBuilding['hotel'] = 0
+
             self.lblSelected.setText('')
             self.lblPrice.setText('')
             for checkBox in checkBoxList:
@@ -128,8 +156,11 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
 
     # 구매 버튼(OK) 버튼 클릭 이벤트 method
     def pay_money(self):
-        numOfBuilding['villa'] = 2
-        print(numOfBuilding['villa'])
+        # 선택 건물 개수 저장
+        f = open('selected_num_of_building.dat', 'wb')
+        pickle.dump(selectedNumOfBuilding, f)
+        f.close()
+
         # 선택한 건물 금액 인자로 pay_money.py(돈 납부하는 기능) 실행
         os.system('python3 pay_money.py %s' % self.lblPrice.text()[2:])     # '￦ '를 제외한 뒷 금액을  인자로
         sys.exit()
