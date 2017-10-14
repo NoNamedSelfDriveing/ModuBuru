@@ -2,7 +2,8 @@ import sys
 import os
 import csv
 #import buy_realty_with_building # 해당 모듈의 딕셔너리 키 값 읽어오기 실패
-from PyQt4 import QtGui
+import pickle
+from PyQt4 import QtGui, QtTest
 
 playerList = []
 
@@ -167,6 +168,7 @@ class Home(QtGui.QMainWindow):
         landCodeColumn = 3
         barcodeValue = self.edtBarcodeInfo.text()
 
+        # 토지 및 건물 구입 python file 실행
         f = open('./realty_info.csv', 'r')
         csvReader = csv.reader(f)
         for row in csvReader:
@@ -177,10 +179,23 @@ class Home(QtGui.QMainWindow):
                 # 부가 건물이 없는 땅이면
                 elif row[landCodeColumn] == '0':
                     os.system('python3 buy_realty_without_building.py %s' % row[landNameColumn])
+                f.close()
                 break
 
+        # buy_realty_with*.py에서 선택한 토지의 건물 수 불러오기
+        while True:
+            try:
+                #QtTest.QTest.qWait(100)
+                f = open('selected_num_of_building.dat', 'rb')
+                break
+            except:
+                pass
+        QtTest.QTest.qWait(1000)
+        self.selectedNumOfBuilding = pickle.load(f)
+        f.close()
+        print(self.selectedNumOfBuilding)
+
         self.edtBarcodeInfo.setText('')
-        print(buy_realty_with_building.numOfBuilding['villa'])  # 딕셔너리 key Error 발생
 
 # window background class
 class Board(QtGui.QFrame):
