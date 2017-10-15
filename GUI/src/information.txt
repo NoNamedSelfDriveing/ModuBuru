@@ -1,1 +1,0 @@
-player_num=4

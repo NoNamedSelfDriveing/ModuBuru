@@ -5,8 +5,6 @@ import pickle
 from PyQt4 import QtGui, QtCore
 from functools import partial
 
-selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
-
 class BuyRealtyWithBuilding(QtGui.QMainWindow):
     boldFont = QtGui.QFont('SansSerif', 80, QtGui.QFont.Bold)
     noBoldFont = QtGui.QFont('SansSerif', 20)
@@ -24,7 +22,7 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
         lblSelect.move(160, 30)
 
         # '땅' 선택 checkBox
-        self.chkLand = QtGui.QCheckBox('  땅', self)
+        self.chkLand = QtGui.QCheckBox('땅', self)
         self.chkLand.stateChanged.connect(partial(self.show_selected, self.chkLand.text()))
         self.chkLand.setFont(BuyRealtyWithBuilding.boldFont)
         self.chkLand.resize(400, 150)
@@ -66,10 +64,9 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
 
         # 선택한 건물 표시할 Label
         self.lblSelected = QtGui.QLabel(self)
-        self.lblSelected.setFont(QtGui.QFont('SansSerif', 50))
+        self.lblSelected.setFont(QtGui.QFont('SansSerif', 30))
         self.lblSelected.resize(200, 80)
         self.lblSelected.move(930, 140)
-        #lblSelected.setText('별장 1')
 
         # '금액' 텍스트 띄울 Label
         lblPriceTxt = QtGui.QLabel('금액', self)
@@ -91,6 +88,8 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
         btnOK.resize(200, 200)
         btnOK.move(920, 470)
 
+        self.checkbox_enable_initial_set();    # 초기 체크박스 enable/disable 설정
+        self.get_each_building_price();  # 본 토지의 건물별 가격 구하기
         self.show()
 
     # 배경 설정 method
@@ -98,65 +97,145 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
         self.theBoard = Board(self)
         self.setCentralWidget(self.theBoard)
 
-    # 선택한 건물 표시 method
-    def show_selected(self, text, state):
+    # 일부 checkbox만 enable 세팅하기(땅을 안샀다면 빌딩, 호텔은 disable 시켜야 함)
+    def checkbox_enable_initial_set(self):
+        # 현재 토지에 세워진 건물 개수 가져오기
+        f = open('selected_num_of_building.dat', 'rb')
+        self.landNowBuildingNum = pickle.load(f)
+        f.close()
+
+        # 땅 유무에 따른 처리
+        if self.landNowBuildingNum.get('land') == 0:
+            self.chkVilla1.setEnabled(False)
+            self.chkVilla2.setEnabled(False)
+            self.chkBuilding.setEnabled(False)
+            self.chkHotel.setEnabled(False)
+
+        elif self.landNowBuildingNum.get('land') == 1:
+            self.chkLand.setEnabled(False)
+
+        # 별장 개수에 따른 처리
+        if self.landNowBuildingNum.get('villa') == 0:
+            self.chkBuilding.setEnabled(False)
+            self.chkHotel.setEnabled(False)
+
+        elif self.landNowBuildingNum.get('villa') == 1:
+            self.chkVilla2.setEnabled(False)
+            self.chkBuilding.setEnabled(False)
+            self.chkHotel.setEnabled(False)
+
+        elif self.landNowBuildingNum.get('villa') == 2:
+            self.chkVilla1.setEnabled(False)
+            self.chkVilla2.setEnabled(False)
+
+        # 빌딩 유무에 따른 처리
+        if self.landNowBuildingNum.get('building') == 1:
+            self.chkBuilding.setEnabled(False)
+
+        elif self.landNowBuildingNum.get('building') == 0:
+            self.chkHotel.setEnabled(False)
+
+        # 호텔 유무에 따른 처리
+        if self.landNowBuildingNum.get('hotel') == 1:
+            self.chkHotel.setEnabled(False)
+
+    # 본 토지의 건물별 가격 가져오기
+    def get_each_building_price(self):
         landNameColumn = 2
+        checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
         # 건물 가격 적힌 column 값
         priceColumn = {self.chkLand.text() : 5, self.chkVilla1.text() : 6, self.chkVilla2.text() : 7, self.chkBuilding.text() : 8, self.chkHotel.text() : 9}
-        checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
+        # 본 토지의 건물 가격 저장 dictionary
+        self.buildingPrice = {self.chkLand.text() : '', self.chkVilla1.text() : '', self.chkVilla2.text() : '', self.chkBuilding.text() : '', self.chkHotel.text() : ''}
 
-        # 선택한 건물 개수 저장 dictionary
-        self.selectedNumOfBuilding = {}
+        # 건물별 가격 저장
+        f = open('./realty_info.csv', 'r')
+        csvReader = csv.reader(f)
+        for row in csvReader:
+            if row[landNameColumn] == sys.argv[1]:
+                # 건물별 가격 저장
+                for targetCheckBox in checkBoxList:
+                    self.buildingPrice[targetCheckBox.text()] = row[priceColumn[targetCheckBox.text()]]
+        f.close()
 
+    # 선택한 건물 표시 method
+    def show_selected(self, text, state):
         # 체크된 건물 확인 후 건물 이름 표시 및 가격 표시
         if state == QtCore.Qt.Checked:
             self.lblSelected.setText(text)
-            for checkBox in checkBoxList:
+            #for checkBox in checkBoxList:
                 # 해당 토지의 건물 가격 표시
-                if checkBox.text() == text:
-                    f = open('./realty_info.csv', 'r')
-                    csvReader = csv.reader(f)
-                    for col in csvReader:
-                        if col[landNameColumn] == sys.argv[1]:
-                            self.lblPrice.setText('￦ %s' % col[priceColumn.get(checkBox.text())] )
+            #    if checkBox.text() == text:
+            self.lblPrice.setText('￦ %s' % self.buildingPrice[text])
 
-                    # 선택 건물 개수 저장
-                    if text == '  땅':
-                        selectedNumOfBuilding['land'] = 1
-                    elif text == '빌라 1':
-                        selectedNumOfBuilding['villa'] = 1
-                    elif text == '빌라 2':
-                        selectedNumOfBuilding['villa'] = 2
-                    elif text == '빌딩':
-                        selectedNumOfBuilding['building'] = 1
-                    elif text == '호텔':
-                        selectedNumOfBuilding['hotel'] = 1
                 # 해당 사항 없는 체크박스 disabled
-                else:
-                    checkBox.setEnabled(False)
+                #else:
+            # 만약 땅 선택 되어 있을 시 별장1, 별장2 enable
+            if self.chkLand.isChecked():
+                self.chkVilla1.setEnabled(True)
+                self.chkVilla2.setEnabled(True)
+            # 만약 '별장 1' 선택 되어있을 시 '별장 2' disable
+            if self.chkVilla1.isChecked():
+                self.chkVilla2.setEnabled(False)
+                # '땅' 선택되어 있을 시 가격 첨가, 텍스트 첨가(땅 + 별장 1)
+                if self.chkLand.isChecked():
+                    self.lblSelected.setText(self.chkLand.text() + ',  ' + self.chkVilla1.text())
+                    self.lblPrice.setText('￦ %s' % str(int(self.buildingPrice.get(self.chkLand.text())) + int(self.buildingPrice.get(self.chkVilla1.text()))))
+            # 만약 '별장 2' 선택 되어있을 시 '별장 1' disable
+            if self.chkVilla2.isChecked():
+                self.chkVilla1.setEnabled(False)
+                # '땅' 선택되어 있을 시 가격 첨가, 텍스트 첨가(땅 + 별장 2)
+                if self.chkLand.isChecked():
+                    self.lblSelected.setText(self.chkLand.text() + ', ' + self.chkVilla2.text())
+                    self.lblPrice.setText('￦ %s' % str(int(self.buildingPrice.get(self.chkLand.text())) + int(self.buildingPrice.get(self.chkVilla2.text()))))
 
         # 체크 박스 체크 해제 시
         else:
-            # 선택 건물 개수 reset
-            if text == '  땅':
-                selectedNumOfBuilding['land'] = 0
-            elif text == '빌라 1':
-                selectedNumOfBuilding['villa'] = 0
-            elif text == '빌라 2':
-                selectedNumOfBuilding['villa'] = 0
-            elif text == '빌딩':
-                selectedNumOfBuilding['building'] = 0
-            elif text == '호텔':
-                selectedNumOfBuilding['hotel'] = 0
-
             self.lblSelected.setText('')
             self.lblPrice.setText('')
-            for checkBox in checkBoxList:
-                checkBox.setEnabled(True)
+
+            # 땅 체크 해제하면 별장1, 별장 2 disable 
+            if text == self.chkLand.text():
+                self.chkVilla1.setEnabled(False)
+                self.chkVilla2.setEnabled(False)
+
+            # '별장 1' 체크 해제하면 '별장 2' enable
+            if text == self.chkVilla1.text():
+                self.chkVilla2.setEnabled(True)
+                # 만약 '땅' 체크되어 있을 시 선택한 건물에 '땅' 표시
+                if self.chkLand.isChecked():
+                    self.lblSelected.setText(self.chkLand.text())
+                    self.lblPrice.setText('￦ %s' % self.buildingPrice.get(self.chkLand.text()))
+                # 이미 별장 1개만 구매했다면 별장 2 disable하기
+                if self.landNowBuildingNum.get('villa') == 1:
+                    self.chkVilla2.setEnabled(False)
+
+            # '별장 2' 체크 해제하면 '별장 1' enable
+            if text == self.chkVilla2.text():
+                self.chkVilla1.setEnabled(True)
+                # 만약 '땅' 체크되어 있을 시 선택한 건물에 '땅' 표시
+                if self.chkLand.isChecked():
+                    self.lblSelected.setText(self.chkLand.text())
+                    self.lblPrice.setText('￦ %s' % self.buildingPrice.get(self.chkLand.text()))
 
     # 구매 버튼(OK) 버튼 클릭 이벤트 method
     def pay_money(self):
+        checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
+        selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
+
         # 선택 건물 개수 저장
+        for checkBox in checkBoxList:
+            if checkBox.isChecked():
+                if checkBox.text() == '땅':
+                    selectedNumOfBuilding['land'] = 1
+                elif checkBox.text() == '별장 1':
+                    selectedNumOfBuilding['villa'] = 1
+                elif checkBox.text() == '별장 2':
+                    selectedNumOfBuilding['villa'] = 2
+                elif checkBox.text() == '빌딩':
+                    selectedNumOfBuilding['building'] = 1
+                elif checkBox.text() == '호텔':
+                    selectedNumOfBuilding['hotel'] = 1
         f = open('selected_num_of_building.dat', 'wb')
         pickle.dump(selectedNumOfBuilding, f)
         f.close()

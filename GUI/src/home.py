@@ -22,7 +22,7 @@ class RealtyInfo:
     # 각각 토지 이름을 key 값으로 dictionary 생성 및 초기화 method
     for row in csvReader:
         realtyOwner[row[landNameColumn]] = ''
-        realtyBuildingNum[row[landNameColumn]] = {'villa' : 0, 'building' : 0, 'hotel' : 0}  # 각각 빌라, 빌딩, 호텔 수
+        realtyBuildingNum[row[landNameColumn]] = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}  # 각각 빌라, 빌딩, 호텔 수
     f.close()
 
 # Player 정보 관리 클래스
@@ -34,12 +34,14 @@ class Player:
         self.name = 'Player %s' % Player.playerCode[playerNum]  # 플레이어 이름
         self.cash = int(Player.initialCash[totalNumOfPlayer-2])  # 2~4명인데 배열은 0번부터이므로 -2
         self.realtyValue = 0  # 플레이어 소유 부동산 가치
-        self.numOfBuilding = {'villa' : 0, 'building' : 0, 'hotel' : 0} # 플레이어가 가지고 있는 각 건물 수
+        self.numOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0} # 플레이어가 가지고 있는 각 건물 수
 
     # 플레이어의 소유 건물 수, 해당 토지의 건물 수 증가 method
-    def add_num_of_building(self, landName, buildingType, num):
-        self.numOfBuilding[buildingType] += num
-        RealtyInfo.realtyBuildingNum[landName][buildingType] += num
+    def add_num_of_building(self, landName, selectedNumOfBuilding):
+        for buildingType in list(selectedNumOfBuilding.keys()):
+            self.numOfBuilding[buildingType] += selectedNumOfBuilding.get(buildingType)
+            RealtyInfo.realtyBuildingNum[landName][buildingType] += selectedNumOfBuilding.get(buildingType)
+
         #print(self.numOfBuilding[buildingType])
         #print(RealtyInfo.realtyBuildingNum[landName][buildingType])
 
@@ -166,34 +168,45 @@ class Home(QtGui.QMainWindow):
         landBarcodeColumn = 1
         landNameColumn = 2
         landCodeColumn = 3
+        landName = ''
         barcodeValue = self.edtBarcodeInfo.text()
 
         # 토지 및 건물 구입 python file 실행
-        f = open('./realty_info.csv', 'r')
-        csvReader = csv.reader(f)
+        f1 = open('./realty_info.csv', 'r')
+        csvReader = csv.reader(f1)
         for row in csvReader:
             if row[landBarcodeColumn] == barcodeValue:
+                landName = row[landNameColumn]
+
+                # 토지에 세워진 건물 개수 저장된 딕셔너리 넘기기
+                f2 = open('selected_num_of_building.dat', 'wb')
+                pickle.dump(RealtyInfo.realtyBuildingNum[landName], f2)
+                f2.close()
+
                 # 부가 건물이 있는 땅이면
                 if row[landCodeColumn] == '1':
-                    os.system('python3 buy_realty_with_building.py %s' % row[landNameColumn])   # 실행 인자 : 땅 이름
+                    os.system('python3 buy_realty_with_building.py %s' % landName)   # 실행 인자 : 땅 이름
                 # 부가 건물이 없는 땅이면
                 elif row[landCodeColumn] == '0':
-                    os.system('python3 buy_realty_without_building.py %s' % row[landNameColumn])
-                f.close()
+                    os.system('python3 buy_realty_without_building.py %s' % landName)
+                f1.close()
                 break
 
         # buy_realty_with*.py에서 선택한 토지의 건물 수 불러오기
         while True:
             try:
-                #QtTest.QTest.qWait(100)
                 f = open('selected_num_of_building.dat', 'rb')
                 break
             except:
                 pass
-        QtTest.QTest.qWait(1000)
         self.selectedNumOfBuilding = pickle.load(f)
         f.close()
-        print(self.selectedNumOfBuilding)
+
+        # 실제 플레이어와 토지에 건물 수 변화 적용하기
+        playerList[self.nowPlayerNum].add_num_of_building(landName, self.selectedNumOfBuilding)
+        print('선택한 건물 :', self.selectedNumOfBuilding)
+        print('플레이어 소유 건물 : ', playerList[self.nowPlayerNum].numOfBuilding)
+        print('해당 토지 세워진 건물 : ', RealtyInfo.realtyBuildingNum[landName], end='\n\n')
 
         self.edtBarcodeInfo.setText('')
 
