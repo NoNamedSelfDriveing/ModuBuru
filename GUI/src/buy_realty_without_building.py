@@ -1,8 +1,11 @@
 import sys
 import os
 import csv
+import pickle
 from PyQt4 import QtGui
 from functools import partial
+
+selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
 
 class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
     def __init__(self):
@@ -55,7 +58,13 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
 
     # 구매 버튼 클릭 이벤트 method
     def pay_money(self, landPrice):
-        print(landPrice)
+        # 토지 수량 증가시키기
+        selectedNumOfBuilding['land'] = 1
+        f = open('selected_num_of_building.dat', 'wb')
+        pickle.dump(selectedNumOfBuilding, f)
+        f.close()
+
+        #print(landPrice)
         os.system('python3 pay_money.py %s' % landPrice)
         sys.exit()
 
