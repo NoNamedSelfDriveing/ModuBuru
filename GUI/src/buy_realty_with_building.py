@@ -5,8 +5,6 @@ import pickle
 from PyQt4 import QtGui, QtCore
 from functools import partial
 
-#selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
-
 class BuyRealtyWithBuilding(QtGui.QMainWindow):
     boldFont = QtGui.QFont('SansSerif', 80, QtGui.QFont.Bold)
     noBoldFont = QtGui.QFont('SansSerif', 20)
@@ -69,7 +67,6 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
         self.lblSelected.setFont(QtGui.QFont('SansSerif', 30))
         self.lblSelected.resize(200, 80)
         self.lblSelected.move(930, 140)
-        #lblSelected.setText('별장 1')
 
         # '금액' 텍스트 띄울 Label
         lblPriceTxt = QtGui.QLabel('금액', self)
@@ -163,27 +160,6 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
 
     # 선택한 건물 표시 method
     def show_selected(self, text, state):
-        #landNameColumn = 2
-        # 건물 가격 적힌 column 값
-        #priceColumn = {self.chkLand.text() : 5, self.chkVilla1.text() : 6, self.chkVilla2.text() : 7, self.chkBuilding.text() : 8, self.chkHotel.text() : 9}
-        '''# 본 토지의 건물 가격 저장 dictionary
-        self.buildingPrice = {self.chkLand.text() : '', self.chkVilla1.text() : '', self.chkVilla2.text() : '', self.chkBuilding.text() : '', self.chkHotel.text() : ''}'''
-        #checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
-
-        # 선택한 건물 개수 저장 dictionary
-        #self.selectedNumOfBuilding = {}
-
-        '''# 건물별 가격 저장
-        f = open('./realty_info.csv', 'r')
-        csvReader = csv.reader(f)
-        for row in csvReader:
-            if row[landNameColumn] == sys.argv[1]:
-                # 건물별 가격 저장
-                for targetCheckBox in checkBoxList:
-                    self.buildingPrice[targetCheckBox.text()] = row[priceColumn[targetCheckBox.text()]]
-                    print('건물별 가격 : ' + targetCheckBox.text() + self.buildingPrice[targetCheckBox.text()])
-        f.close()'''
-
         # 체크된 건물 확인 후 건물 이름 표시 및 가격 표시
         if state == QtCore.Qt.Checked:
             self.lblSelected.setText(text)
