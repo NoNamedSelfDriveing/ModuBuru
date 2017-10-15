@@ -38,6 +38,8 @@ class GiveInitialMoney(QtGui.QMainWindow):
         initialCashList = ['4560000', '3680000', '2900000'] # 플레이어 수에 따른 초기 현금 지급액 리스트(각각 2명, 3명, 4명)
         personalInitialCash = initialCashList[playerNum-2]    # 개인에게 지급되는 현금 (2~4명이므로 index는 0~2)
 
+        # 에러 방지 위해 PushButton disabled
+        self.btnStart.setEnabled(False)
         # 루틴 돌며 각각 플레이어 현급 출력
         for i in range(1, int(playerNum)+1):
             self.lblMain.setText('%s 번째 플레이어 현금 인출 중...' % playerOrder.get(str(i)))
