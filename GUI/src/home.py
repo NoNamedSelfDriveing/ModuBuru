@@ -42,7 +42,7 @@ class Player:
             self.numOfBuilding[buildingType] += selectedNumOfBuilding.get(buildingType)
             RealtyInfo.realtyBuildingNum[landName][buildingType] += selectedNumOfBuilding.get(buildingType)
 
-        #print(self.numOfBuilding[buildingType])
+        #print(self.numOfBuilding[buildipngType])
         #print(RealtyInfo.realtyBuildingNum[landName][buildingType])
 
     # 벌금 지급 능력 없을 시 선택 부동산 청산 method
@@ -100,7 +100,7 @@ class Home(QtGui.QMainWindow):
         # 현재 턴의 플레이어 부동산 가치 띄울 Label
         self.lblNowPlayerRealtyValue = QtGui.QLabel('', self)
         self.lblNowPlayerRealtyValue.setFont(noBoldFont)
-        self.lblNowPlayerRealtyValue.resize(self.lblNowPlayerRealtyValue.sizeHint())
+        self.lblNowPlayerRealtyValue.resize(400, 100)
         self.lblNowPlayerRealtyValue.move(450, 350)
 
         # '바코드 입력' 텍스트 띄울 Label
@@ -120,8 +120,6 @@ class Home(QtGui.QMainWindow):
         # 플레이어 리스트 설정하기
         self.set_player_list()
 
-        #playerList[0].add_num_of_building('cairo', 'villa', 2)
-
         self.show()
 
     # 배경 설정 method
@@ -133,7 +131,7 @@ class Home(QtGui.QMainWindow):
     def set_player_list(self):
         self.nowPlayerNum = 0    # 현재 플레이어가 몇 번째 플레이어인지 저장할 변수 
 
-        # 플레이이 인원 수 구하기
+        # 플레이이 인원 수 구하기)
         self.player_num = int(sys.argv[1])
 
         # 플레이어 리스트 설정하기
@@ -148,7 +146,6 @@ class Home(QtGui.QMainWindow):
 
         self.lblNowPlayerName.resize(self.lblNowPlayerName.sizeHint())
         self.lblNowPlayerCash.resize(self.lblNowPlayerCash.sizeHint())
-        self.lblNowPlayerRealtyValue.resize(self.lblNowPlayerRealtyValue.sizeHint())
 
     # Next Turn 버튼 클릭 이벤트 method
     def change_turn(self):
@@ -178,37 +175,56 @@ class Home(QtGui.QMainWindow):
             if row[landBarcodeColumn] == barcodeValue:
                 landName = row[landNameColumn]
 
-                # 토지에 세워진 건물 개수 저장된 딕셔너리 넘기기
-                f2 = open('selected_num_of_building.dat', 'wb')
-                pickle.dump(RealtyInfo.realtyBuildingNum[landName], f2)
-                f2.close()
+                # 주인이 있는 땅이면
+                if RealtyInfo.realtyOwner[landName] != '' and RealtyInfo.realtyOwner[landName] != playerList[self.nowPlayerNum].nameCode:
+                    os.system('python3 pay_money.py 6000')
 
-                # 부가 건물이 있는 땅이면
-                if row[landCodeColumn] == '1':
-                    os.system('python3 buy_realty_with_building.py %s' % landName)   # 실행 인자 : 땅 이름
-                # 부가 건물이 없는 땅이면
-                elif row[landCodeColumn] == '0':
-                    os.system('python3 buy_realty_without_building.py %s' % landName)
-                f1.close()
-                break
+                # 주인이 없으면
+                else:
+                    # 토지에 세워진 건물 개수 저장된 딕셔너리 넘기기
+                    f2 = open('selected_num_of_building.dat', 'wb')
+                    pickle.dump(RealtyInfo.realtyBuildingNum[landName], f2)
+                    f2.close()
 
-        # buy_realty_with*.py에서 선택한 토지의 건물 수 불러오기
-        while True:
-            try:
-                f = open('selected_num_of_building.dat', 'rb')
-                break
-            except:
-                pass
-        self.selectedNumOfBuilding = pickle.load(f)
-        f.close()
+                    # 부가 건물이 있는 땅이면
+                    if row[landCodeColumn] == '1':
+                        os.system('python3 buy_realty_with_building.py %s' % landName)   # 실행 인자 : 땅 이름
+                    # 부가 건물이 없는 땅이면
+                    elif row[landCodeColumn] == '0':
+                        os.system('python3 buy_realty_without_building.py %s' % landName)
+                    f1.close()
+                    #break
 
-        # 실제 플레이어와 토지에 건물 수 변화 적용하기
-        playerList[self.nowPlayerNum].add_num_of_building(landName, self.selectedNumOfBuilding)
-        print('선택한 건물 :', self.selectedNumOfBuilding)
-        print('플레이어 소유 건물 : ', playerList[self.nowPlayerNum].numOfBuilding)
-        print('해당 토지 세워진 건물 : ', RealtyInfo.realtyBuildingNum[landName], end='\n\n')
+                    # buy_realty_with*.py에서 선택한 토지의 건물 수 불러오기
+                    while True:
+                        try:
+                            f = open('selected_num_of_building.dat', 'rb')
+                            break
+                        except:
+                            pass
+                    self.selectedNumOfBuilding = pickle.load(f)
+                    buyFlag = pickle.load(f)
+                    totalPrice = pickle.load(f)
+                    f.close()
 
-        self.edtBarcodeInfo.setText('')
+                    # 구매 시 실제 플레이어와 토지에 건물 수 변화 적용 및 재산 정보 변경
+                    if buyFlag == 1:
+                        RealtyInfo.realtyOwner[landName] = playerList[self.nowPlayerNum].nameCode
+                        playerList[self.nowPlayerNum].add_num_of_building(landName, self.selectedNumOfBuilding)
+                        playerList[self.nowPlayerNum].cash -= int(totalPrice)
+                        playerList[self.nowPlayerNum].realtyValue += int(totalPrice)
+                        print(playerList[self.nowPlayerNum].cash)
+                    print('buyFlag : ', buyFlag)
+                    print('선택한 건물 :', self.selectedNumOfBuilding)
+                    print('플레이어 소유 건물 : ', playerList[self.nowPlayerNum].numOfBuilding)
+                    print('해당 토지 세워진 건물 : ', RealtyInfo.realtyBuildingNum[landName], end='\n\n')
+
+                    self.edtBarcodeInfo.setText('')
+                    self.lblNowPlayerCash.setText('￦ %s' % str(playerList[self.nowPlayerNum].cash))
+                    self.lblNowPlayerRealtyValue.setText('￦ %s' % str(playerList[self.nowPlayerNum].realtyValue))
+                    print(playerList[self.nowPlayerNum].realtyValue)
+
+                    break
 
 # window background class
 class Board(QtGui.QFrame):
