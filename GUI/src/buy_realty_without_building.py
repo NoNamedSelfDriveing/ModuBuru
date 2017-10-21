@@ -21,7 +21,7 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
         lblPriceTxt.move(300, 100)
 
         # 금액 표시할 Label
-        self.lblPrice = QtGui.QLabel(self)
+        self.lblPrice = QtGui.QLabel('￦ 0', self)
         self.lblPrice.setFont(QtGui.QFont('SansSerif', 80))
         self.lblPrice.resize(750, 100)
         self.lblPrice.move(100, 300)
@@ -29,11 +29,18 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
         # 토지 가격 세팅
         landPrice = self.show_price()
 
+        # 구매 취소 PushButton
+        self.btnCancel = QtGui.QPushButton('취소', self)
+        self.btnCancel.clicked.connect(self.cancel_buy)
+        self.btnCancel.setFont(QtGui.QFont('SansSerif', 50, QtGui.QFont.Bold))
+        self.btnCancel.resize(200, 200)
+        self.btnCancel.move(900, 100)
+
         # 구매 결정 PushButton
         self.btnOK = QtGui.QPushButton('구매', self)
         self.btnOK.clicked.connect(partial(self.pay_money, landPrice))
         self.btnOK.setFont(QtGui.QFont('SansSerif', 50, QtGui.QFont.Bold))
-        self.btnOK.resize(300, 300)
+        self.btnOK.resize(200, 200)
         self.btnOK.move(900, 350)
 
         self.show()
@@ -56,12 +63,27 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
 
         return col[landPriceColumn]
 
+    # 구매 취소 버튼 클릭 이벤트 method
+    def cancel_buy(self):
+        selectedNumOfBuilding['land'] = 0
+        buyFlag = 0
+        f = open('selected_num_of_building.dat', 'wb')
+        pickle.dump(selectedNumOfBuilding, f)
+        pickle.dump(buyFlag, f)
+        f.close()
+
+        sys.exit()
+
     # 구매 버튼 클릭 이벤트 method
     def pay_money(self, landPrice):
         # 토지 수량 증가시키기
         selectedNumOfBuilding['land'] = 1
+        totalPrice = self.lblPrice.text()[2:0]
+        buyFlag = 1
         f = open('selected_num_of_building.dat', 'wb')
         pickle.dump(selectedNumOfBuilding, f)
+        pickle.dump(buyFlag, f)
+        pickle.dump(totalPrice, f)
         f.close()
 
         #print(landPrice)
