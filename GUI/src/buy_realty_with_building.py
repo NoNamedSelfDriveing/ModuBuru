@@ -75,7 +75,7 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
         lblPriceTxt.move(950, 270)
 
         # 선택한 건물 금액 표시할 Label
-        self.lblPrice = QtGui.QLabel(self)
+        self.lblPrice = QtGui.QLabel('￦ 0', self)
         self.lblPrice.setFont(QtGui.QFont('SansSerif', 30))
         self.lblPrice.resize(300, 80)
         self.lblPrice.move(900, 380)
@@ -222,6 +222,13 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
     def pay_money(self):
         checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
         selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
+        totalPrice = self.lblPrice.text()[2:]
+        buyFlag = 0
+
+        # 토지 및 건물 구매했는지 안했는지 flag 설정하기
+        for buildingType in list(selectedNumOfBuilding.keys()):
+            if selectedNumOfBuilding[buildingType] != 0:
+                buyFlag = 1
 
         # 선택 건물 개수 저장
         for checkBox in checkBoxList:
@@ -236,13 +243,26 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
                     selectedNumOfBuilding['building'] = 1
                 elif checkBox.text() == '호텔':
                     selectedNumOfBuilding['hotel'] = 1
+
+        # 토지 및 건물 구매했는지 안했는지 flag 설정하기
+        for buildingType in list(selectedNumOfBuilding.keys()):
+            if selectedNumOfBuilding[buildingType] != 0:
+                buyFlag = 1
+
         f = open('selected_num_of_building.dat', 'wb')
         pickle.dump(selectedNumOfBuilding, f)
+        pickle.dump(buyFlag, f)
+        pickle.dump(totalPrice, f)
         f.close()
 
         # 선택한 건물 금액 인자로 pay_money.py(돈 납부하는 기능) 실행
-        os.system('python3 pay_money.py %s' % self.lblPrice.text()[2:])     # '￦ '를 제외한 뒷 금액을  인자로
-        sys.exit()
+        if buyFlag == 1:
+            os.system('python3 pay_money.py %s' % totalPrice)     # '￦ '를 제외한 뒷 금액을  인자로
+            sys.exit()
+
+        # 아무것도 선택 안한 경우 그냥 close
+        else:
+            sys.exit()
 
 # 배경 설정 Class
 class Board(QtGui.QFrame):
