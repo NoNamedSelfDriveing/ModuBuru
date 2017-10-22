@@ -24,11 +24,24 @@ class Bankrupt(QtGui.QMainWindow):
 
         self.verticalLayoutScroll = QtGui.QVBoxLayout(self.realtyScrollAreaWidgetContents)
 
-        for i in range(0, 10):
+        '''for i in range(0, 10):
             pushButton = QtGui.QPushButton('Hello', self)
             pushButton.setFont(QtGui.QFont('SansSerif', 30, QtGui.QFont.Bold))
             pushButton.resize(100, 100)
             self.verticalLayoutScroll.addWidget(pushButton)
+        '''
+
+        realtyList = ['서울', '타이페이', '시드니', '퀸엘리자베스호']
+        for i in realtyList:
+            pushButton = QtGui.QPushButton(i, self)
+            pushButton.setFont(QtGui.QFont('SansSerif', 30, QtGui.QFont.Bold))
+            pushButton.resize(100, 100)
+            if i == '서울' or i == '시드니':
+                #pushButton.setIcon(QtGui.QIcon('../image/green.png'))
+                #pushButton.setIconSize(QtCore.QSize(100, 100))
+                pushButton.setStyleSheet('background-image: url("../image/green.png")')
+            self.verticalLayoutScroll.addWidget(pushButton)
+
 
         # '납부금' 텍스트 표시 Label
         lblFineTxt = QtGui.QLabel('납부금', self)
@@ -41,7 +54,7 @@ class Bankrupt(QtGui.QMainWindow):
         self.lblFine.setFont(QtGui.QFont('SansSerif', 30))
         self.lblFine.resize(300, 50)
         self.lblFine.move(920, 100)
-        self.lblFine.setText('￦ 00, 000')
+        self.lblFine.setText('￦ 2,000,000')
 
         # '합계' 텍스트 표시 Label
         lblTotalTxt = QtGui.QLabel('합계', self)
@@ -52,9 +65,9 @@ class Bankrupt(QtGui.QMainWindow):
         # 선택한 건물 가치 총액 표시할 Label
         self.lblTotalPrice = QtGui.QLabel(self)
         self.lblTotalPrice.setFont(QtGui.QFont('SansSerif', 30))
-        self.lblTotalPrice.resize(200, 50)
+        self.lblTotalPrice.resize(400, 50)
         self.lblTotalPrice.move(200, 620)
-        self.lblTotalPrice.setText('￦ 00,000')
+        self.lblTotalPrice.setText('￦ 1,500,000')
 
         # 파산 신청 PushButton
         self.btnBankrupt = QtGui.QPushButton('파산\n신청', self)
@@ -115,7 +128,7 @@ class Board(QtGui.QFrame):
         self.init_board()
 
     def init_board(self):
-        self.setStyleSheet('background-image: url("../image/green.png")')
+        self.setStyleSheet('background-image: url("../image/blue_marble.jpg")')
 
 def run():
     app = QtGui.QApplication([])

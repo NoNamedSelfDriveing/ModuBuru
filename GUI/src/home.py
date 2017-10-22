@@ -35,15 +35,35 @@ class Player:
         self.cash = int(Player.initialCash[totalNumOfPlayer-2])  # 2~4명인데 배열은 0번부터이므로 -2
         self.realtyValue = 0  # 플레이어 소유 부동산 가치
         self.numOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0} # 플레이어가 가지고 있는 각 건물 수
+        self.realtyList = {}
 
     # 플레이어의 소유 건물 수, 해당 토지의 건물 수 증가 method
     def add_num_of_building(self, landName, selectedNumOfBuilding):
+        landNameColumn = 2
+        buildingFineColumn = {'land' : 14, 'villa' : [10, 11], 'building' : 12, 'hotel' : 13}
+        self.realtyList[landName] = 0   # 토지 부동산 가격 초기화
+        f = open('./realty_info.csv')
+        csvReader = csv.reader(f)
         for buildingType in list(selectedNumOfBuilding.keys()):
             self.numOfBuilding[buildingType] += selectedNumOfBuilding.get(buildingType)
             RealtyInfo.realtyBuildingNum[landName][buildingType] += selectedNumOfBuilding.get(buildingType)
 
-        #print(self.numOfBuilding[buildipngType])
-        #print(RealtyInfo.realtyBuildingNum[landName][buildingType])
+        # 토지에 세워진 건물 가격 저장
+        for row in csvReader:
+            if row[landNameColumn] == landName:
+                if RealtyInfo.realtyBuildingNum[landName]['land'] == 1:
+                    self.realtyList[landName] += int(row[buildingFineColumn['land']])
+                    print(self.realtyList[landName])
+                if RealtyInfo.realtyBuildingNum[landName]['villa'] == 1:
+                    self.realtyList[landName] += int(row[buildingFineColumn['villa'][0]])
+                elif RealtyInfo.realtyBuildingNum[landName]['villa'] == 2:
+                    self.realtyList[landName] += int(row[buildingFineColumn['villa'][1]])
+                if RealtyInfo.realtyBuildingNum[landName]['building'] == 1:
+                    self.realtyList[landName] += int(row[buildingFineColumn['building']])
+                if RealtyInfo.realtyBuildingNum[landName]['hotel'] == 1:
+                    self.realtyList[landName] += int(row[buildingFineColumn['hotel']])
+        f.close()
+        print(self.realtyList[landName])
 
     # 벌금 지급 능력 없을 시 선택 부동산 청산 method
     def remove_realty(self, realtyList):
@@ -166,7 +186,12 @@ class Home(QtGui.QMainWindow):
         landNameColumn = 2
         landCodeColumn = 3
         landName = ''
+        playerNumByCode = {}
         barcodeValue = self.edtBarcodeInfo.text()
+
+        # 플레이어 코드를 숫자로 A->0, B->1
+        for num in range(0, self.player_num):
+            playerNumByCode[Player.playerCode[num]] = num
 
         # 토지 및 건물 구입 python file 실행
         f1 = open('./realty_info.csv', 'r')
@@ -177,7 +202,18 @@ class Home(QtGui.QMainWindow):
 
                 # 주인이 있는 땅이면
                 if RealtyInfo.realtyOwner[landName] != '' and RealtyInfo.realtyOwner[landName] != playerList[self.nowPlayerNum].nameCode:
-                    os.system('python3 pay_money.py 6000')
+                    playerIndex =  playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].nameCode    # 땅 주인 플레이어 이름
+                    #realtyOwnerNameCode = playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].nameCode    # 땅 주인 플레이어 이름
+                    realtyOwnerNameCode = playerList[playerIndex].nameCode    # 땅 주인 플레이어 이름
+                    #realtyFinePrice = playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].realtyList[landName]    # 땅 벌금 가격
+                    realtyFinePrice = playerList[playerIndex].realtyList[landName]    # 땅 벌금 가격
+
+                    # 땅 주인 플레이어 이름, 가격 전송
+                    os.system('python3 give_money_to_player.py %s %s' % ('Player' + realtyOwnerNameCode, realtyFinePrice))
+                    #playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].cash -= int(realtyFinePrice)
+                    playerList[playerIndex].cash -= int(realtyFinePrice)
+                    self.lblNowPlayerCash.setText('￦ %s' % playerList[playerIndex].cash)
+                    self.edtBarcodeInfo.setText('')
 
                 # 주인이 없으면
                 else:
@@ -213,16 +249,17 @@ class Home(QtGui.QMainWindow):
                         playerList[self.nowPlayerNum].add_num_of_building(landName, self.selectedNumOfBuilding)
                         playerList[self.nowPlayerNum].cash -= int(totalPrice)
                         playerList[self.nowPlayerNum].realtyValue += int(totalPrice)
-                        print(playerList[self.nowPlayerNum].cash)
+                        #print(playerList[self.nowPlayerNum].cash)
+                    '''
                     print('buyFlag : ', buyFlag)
                     print('선택한 건물 :', self.selectedNumOfBuilding)
                     print('플레이어 소유 건물 : ', playerList[self.nowPlayerNum].numOfBuilding)
                     print('해당 토지 세워진 건물 : ', RealtyInfo.realtyBuildingNum[landName], end='\n\n')
-
+                    '''
                     self.edtBarcodeInfo.setText('')
                     self.lblNowPlayerCash.setText('￦ %s' % str(playerList[self.nowPlayerNum].cash))
                     self.lblNowPlayerRealtyValue.setText('￦ %s' % str(playerList[self.nowPlayerNum].realtyValue))
-                    print(playerList[self.nowPlayerNum].realtyValue)
+                    # print(playerList[self.nowPlayerNum].realtyValue)
 
                     break
 
