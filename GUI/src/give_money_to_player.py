@@ -18,15 +18,15 @@ class GiveMoneyToPlayer(QtGui.QMainWindow):
 
         self.lblPrice = QtGui.QLabel(self)
         self.lblPrice.setFont(QtGui.QFont('SansSerif', 70, QtGui.QFont.Bold))
-        self.lblPrice.resize(500, 100)
-        self.lblPrice.move(50, 250)
+        self.lblPrice.resize(550, 100)
+        self.lblPrice.move(30, 250)
         self.lblPrice.setText('￦ 50,000')
 
         self.btnOK = QtGui.QPushButton('지급\n완료', self)
         self.btnOK.setFont(QtGui.QFont('SansSerif', 50, QtGui.QFont.Bold))
         self.btnOK.clicked.connect(self.closeApplication)
         self.btnOK.resize(250, 250)
-        self.btnOK.move(580, 200)
+        self.btnOK.move(620, 200)
 
         self.showPrice()
         self.show()

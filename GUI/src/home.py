@@ -202,7 +202,7 @@ class Home(QtGui.QMainWindow):
 
                 # 주인이 있는 땅이면
                 if RealtyInfo.realtyOwner[landName] != '' and RealtyInfo.realtyOwner[landName] != playerList[self.nowPlayerNum].nameCode:
-                    playerIndex =  playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].nameCode    # 땅 주인 플레이어 이름
+                    playerIndex = playerNumByCode[RealtyInfo.realtyOwner[landName]]    # 땅 주인 플레이어 이름
                     #realtyOwnerNameCode = playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].nameCode    # 땅 주인 플레이어 이름
                     realtyOwnerNameCode = playerList[playerIndex].nameCode    # 땅 주인 플레이어 이름
                     #realtyFinePrice = playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].realtyList[landName]    # 땅 벌금 가격
@@ -211,8 +211,9 @@ class Home(QtGui.QMainWindow):
                     # 땅 주인 플레이어 이름, 가격 전송
                     os.system('python3 give_money_to_player.py %s %s' % ('Player' + realtyOwnerNameCode, realtyFinePrice))
                     #playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].cash -= int(realtyFinePrice)
-                    playerList[playerIndex].cash -= int(realtyFinePrice)
-                    self.lblNowPlayerCash.setText('￦ %s' % playerList[playerIndex].cash)
+                    playerList[self.nowPlayerNum].cash -= int(realtyFinePrice)
+                    playerList[playerIndex].cash += int(realtyFinePrice)
+                    self.lblNowPlayerCash.setText('￦ %s' % playerList[self.nowPlayerNum].cash)
                     self.edtBarcodeInfo.setText('')
 
                 # 주인이 없으면
