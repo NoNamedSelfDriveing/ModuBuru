@@ -28,10 +28,10 @@ class PayMoney(QtGui.QMainWindow):
         lblRemainMoneyTxt.resize(lblRemainMoneyTxt.sizeHint())
         lblRemainMoneyTxt.move(230, 300)
 
-        # 구매 결정 PushButton
+        # 남은 금액 표시 Label
         self.lblRemainMoney = QtGui.QLabel(self)
         self.lblRemainMoney.setFont(QtGui.QFont('SansSerif', 60))
-        self.lblRemainMoney.resize(600, 100)
+        self.lblRemainMoney.resize(700, 100)
         self.lblRemainMoney.move(200, 450)
 
         self.show_initial_remain_money()
