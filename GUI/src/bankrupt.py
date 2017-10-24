@@ -1,4 +1,5 @@
 import sys
+import pickle
 from PyQt4 import QtGui, QtCore
 
 class Bankrupt(QtGui.QMainWindow):
@@ -30,7 +31,7 @@ class Bankrupt(QtGui.QMainWindow):
             pushButton.resize(100, 100)
             self.verticalLayoutScroll.addWidget(pushButton)
         '''
-
+        '''
         realtyList = ['서울', '타이페이', '시드니', '퀸엘리자베스호']
         for i in realtyList:
             pushButton = QtGui.QPushButton(i, self)
@@ -41,7 +42,7 @@ class Bankrupt(QtGui.QMainWindow):
                 #pushButton.setIconSize(QtCore.QSize(100, 100))
                 pushButton.setStyleSheet('background-image: url("../image/green.png")')
             self.verticalLayoutScroll.addWidget(pushButton)
-
+        '''
 
         # '납부금' 텍스트 표시 Label
         lblFineTxt = QtGui.QLabel('납부금', self)
@@ -53,7 +54,7 @@ class Bankrupt(QtGui.QMainWindow):
         self.lblFine = QtGui.QLabel(self)
         self.lblFine.setFont(QtGui.QFont('SansSerif', 30))
         self.lblFine.resize(300, 50)
-        self.lblFine.move(920, 100)
+        self.lblFine.move(950, 100)
         self.lblFine.setText('￦ 2,000,000')
 
         # '합계' 텍스트 표시 Label
@@ -71,7 +72,7 @@ class Bankrupt(QtGui.QMainWindow):
 
         # 파산 신청 PushButton
         self.btnBankrupt = QtGui.QPushButton('파산\n신청', self)
-        self.btnBankrupt.clicked.connect(self.go_bankrupt)
+        self.btnBankrupt.clicked.connect(self.goBankrupt)
         self.btnBankrupt.setFont(QtGui.QFont('SansSerif', 40, QtGui.QFont.Bold))
         self.btnBankrupt.resize(200, 200)
         self.btnBankrupt.move(1000, 200)
@@ -84,6 +85,8 @@ class Bankrupt(QtGui.QMainWindow):
         self.btnOK.resize(200, 200)
         self.btnOK.move(1000, 450)
 
+        self.show_fine()
+        self.show_realty_list()
         self.show()
 
     # 배경 설정 method
@@ -93,14 +96,29 @@ class Bankrupt(QtGui.QMainWindow):
 
     # 납부금(벌금) 표시 method
     def show_fine(self):
-    # self.lblFine.setText(fine)
-        pass
+        self.fine = sys.argv[1]
+        self.lblFine.setText('￦ %s' % self.fine)
 
     # 부동산 리스트 ScrollArea에 들어갈 부동산 리스트 생성 및 채워넣는 method
     def show_realty_list(self):
+        f = open('player_realty_list.dat', 'rb')
+        realtyList = pickle.load(f)
+        f.close()
+        print(realtyList)
     # while(condition):
     # self.verticalLayoutScroll.addWidget(QWidgt)
-        pass
+        for realty in list(realtyList.keys()):
+            pushButton = QtGui.QCheckBox(realty + '           ' + '￦ ' + str(realtyList[realty]))
+            pushButton.stateChanged.connect(self.select_realty)
+            pushButton.setFont(QtGui.QFont('SansSerif', 40, QtGui.QFont.Bold))
+            pushButton.resize(500, 100)
+            '''if i == '서울' or i == '시드니':
+                #pushButton.setIcon(QtGui.QIcon('../image/green.png'))
+                #pushButton.setIconSize(QtCore.QSize(100, 100))
+                pushButton.setStyleSheet('background-image: url("../image/green.png")')
+            '''
+            self.verticalLayoutScroll.addWidget(pushButton)
+
 
     # 부동산 리스트 목록 PushButton 클릭 이벤트
     def select_realty(self):
@@ -116,10 +134,15 @@ class Bankrupt(QtGui.QMainWindow):
         pass
 
     # '파산 신청' Button 클릭 이벤트
-    def go_bankrupt(self):
+    def goBankrupt(self):
         choice = QtGui.QMessageBox.question(self, '파산 신청', '정말로 파산하시겠습니까?(모든 재산이 사라집니다)', QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+        # 파산 True 설정 및 넘기기
         if choice == QtGui.QMessageBox.Yes:
-            sys.exit()
+            bankrupt = True
+            f = open('check_bankrupt.dat', 'wb')
+            pickle.dump(bankrupt, f)
+            f.close()
+        sys.exit()
 
 # 배경 설정 class
 class Board(QtGui.QFrame):
