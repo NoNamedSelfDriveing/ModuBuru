@@ -6,6 +6,7 @@ import pickle
 from PyQt4 import QtGui, QtTest
 
 playerList = []
+bankruptPlayerNum = [-1]   # 파산한 플레이어 넘버 저장
 
 # 부동산 관리 클래스
 class RealtyInfo:
@@ -36,12 +37,15 @@ class Player:
         self.realtyValue = 0  # 플레이어 소유 부동산 가치
         self.numOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0} # 플레이어가 가지고 있는 각 건물 수
         self.realtyList = {}
+        self.realtyValueList = {}
 
     # 플레이어의 소유 건물 수, 해당 토지의 건물 수 증가 method
     def add_num_of_building(self, landName, selectedNumOfBuilding):
         landNameColumn = 2
         buildingFineColumn = {'land' : 14, 'villa' : [10, 11], 'building' : 12, 'hotel' : 13}
-        self.realtyList[landName] = 0   # 토지 부동산 가격 초기화
+        buildingValueColumn = {'land' : 5, 'villa' : [6, 7], 'building' : 8, 'hotel' : 9}
+        self.realtyList[landName] = 0   # 토지 부동산 벌금 가격 초기화
+        self.realtyValueList[landName] = 0  # 토지 부동산 가격 초기화
         f = open('./realty_info.csv')
         csvReader = csv.reader(f)
         for buildingType in list(selectedNumOfBuilding.keys()):
@@ -53,15 +57,20 @@ class Player:
             if row[landNameColumn] == landName:
                 if RealtyInfo.realtyBuildingNum[landName]['land'] == 1:
                     self.realtyList[landName] += int(row[buildingFineColumn['land']])
+                    self.realtyValueList[landName] += int(row[buildingValueColumn['land']])
                     print(self.realtyList[landName])
                 if RealtyInfo.realtyBuildingNum[landName]['villa'] == 1:
                     self.realtyList[landName] += int(row[buildingFineColumn['villa'][0]])
+                    self.realtyValueList[landName] += int(row[buildingValueColumn['villa'][0]])
                 elif RealtyInfo.realtyBuildingNum[landName]['villa'] == 2:
                     self.realtyList[landName] += int(row[buildingFineColumn['villa'][1]])
+                    self.realtyValueList[landName] += int(row[buildingValueColumn['villa'][1]])
                 if RealtyInfo.realtyBuildingNum[landName]['building'] == 1:
                     self.realtyList[landName] += int(row[buildingFineColumn['building']])
+                    self.realtyValueList[landName] += int(row[buildingValueColumn['building']])
                 if RealtyInfo.realtyBuildingNum[landName]['hotel'] == 1:
                     self.realtyList[landName] += int(row[buildingFineColumn['hotel']])
+                    self.realtyValueList[landName] += int(row[buildingValueColumn['hotel']])
         f.close()
         print(self.realtyList[landName])
 
@@ -167,11 +176,22 @@ class Home(QtGui.QMainWindow):
         self.lblNowPlayerName.resize(self.lblNowPlayerName.sizeHint())
         self.lblNowPlayerCash.resize(self.lblNowPlayerCash.sizeHint())
 
+        # 테스트!!!!!
+        #테스트!!
+        playerList[0].cash = 50000
+
     # Next Turn 버튼 클릭 이벤트 method
     def change_turn(self):
         self.nowPlayerNum += 1
-        if self.nowPlayerNum == self.player_num:    # 현재 플레이어가 마지막 순서의 플레이어면
+
+        if self.nowPlayerNum >= self.player_num:    # 현재 플레이어가 마지막 순서의 플레이어면
             self.nowPlayerNum = 0                   # 처음 플레이어로 Back
+
+        # 다음 플레이어가 파산한 플레이어라면
+        for num in bankruptPlayerNum:
+            if self.nowPlayerNum == num:
+                self.nowPlayerNum += 1  # 한 스텝 더 증가
+                break
 
         # 다음 플레이어 정보 표시
         self.lblNowPlayerName.setText(playerList[self.nowPlayerNum].name)
@@ -202,19 +222,38 @@ class Home(QtGui.QMainWindow):
 
                 # 주인이 있는 땅이면
                 if RealtyInfo.realtyOwner[landName] != '' and RealtyInfo.realtyOwner[landName] != playerList[self.nowPlayerNum].nameCode:
-                    playerIndex = playerNumByCode[RealtyInfo.realtyOwner[landName]]    # 땅 주인 플레이어 이름
-                    #realtyOwnerNameCode = playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].nameCode    # 땅 주인 플레이어 이름
-                    realtyOwnerNameCode = playerList[playerIndex].nameCode    # 땅 주인 플레이어 이름
-                    #realtyFinePrice = playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].realtyList[landName]    # 땅 벌금 가격
-                    realtyFinePrice = playerList[playerIndex].realtyList[landName]    # 땅 벌금 가격
 
-                    # 땅 주인 플레이어 이름, 가격 전송
-                    os.system('python3 give_money_to_player.py %s %s' % ('Player' + realtyOwnerNameCode, realtyFinePrice))
-                    #playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].cash -= int(realtyFinePrice)
-                    playerList[self.nowPlayerNum].cash -= int(realtyFinePrice)
-                    playerList[playerIndex].cash += int(realtyFinePrice)
-                    self.lblNowPlayerCash.setText('￦ %s' % playerList[self.nowPlayerNum].cash)
-                    self.edtBarcodeInfo.setText('')
+                    ownerIndex = playerNumByCode[RealtyInfo.realtyOwner[landName]]    # 땅 주인 플레이어 이름
+                    realtyOwnerNameCode = playerList[ownerIndex].nameCode    # 땅 주인 플레이어 이름
+                    realtyFinePrice = playerList[ownerIndex].realtyList[landName]    # 땅 벌금 가격
+
+                    # 벌금이 현재 플레이어의 현금 소유액보다 높은 경우
+                    if realtyFinePrice > playerList[self.nowPlayerNum].cash:
+                        # 소유 부동산 리스트 전송
+                        f = open('player_realty_list.dat', 'wb')
+                        pickle.dump(playerList[self.nowPlayerNum].realtyValueList, f)
+                        f.close()
+                        os.system('python3 bankrupt.py %s' % realtyFinePrice)
+                        # 파일 열릴 때까지 대기
+                        while True:
+                            try:
+                                f = open('check_bankrupt.dat', 'rb')
+                                break
+                            except:
+                                pass
+                        bankrupt = pickle.load(f)
+                        if bankrupt == True:
+                            self.goBankrupt()
+
+                    # 벌금이 현재 플레이어의 현금 소유액보다 같거나 낮은 경우
+                    else:
+                        # 땅 주인 플레이어 이름, 가격 전송
+                        os.system('python3 give_money_to_player.py %s %s' % ('Player' + realtyOwnerNameCode, realtyFinePrice))
+                        #playerList[playerNumByCode[RealtyInfo.realtyOwner[landName]]].cash -= int(realtyFinePrice)
+                        playerList[self.nowPlayerNum].cash -= int(realtyFinePrice)
+                        playerList[ownerIndex].cash += int(realtyFinePrice)
+                        self.lblNowPlayerCash.setText('￦ %s' % playerList[self.nowPlayerNum].cash)
+                        self.edtBarcodeInfo.setText('')
 
                 # 주인이 없으면
                 else:
@@ -225,10 +264,10 @@ class Home(QtGui.QMainWindow):
 
                     # 부가 건물이 있는 땅이면
                     if row[landCodeColumn] == '1':
-                        os.system('python3 buy_realty_with_building.py %s' % landName)   # 실행 인자 : 땅 이름
+                        os.system('python3 buy_realty_with_building.py %s %s' % (landName, str(playerList[self.nowPlayerNum].cash)))   # 실행 인자 : 땅 이름, 소유 현금
                     # 부가 건물이 없는 땅이면
                     elif row[landCodeColumn] == '0':
-                        os.system('python3 buy_realty_without_building.py %s' % landName)
+                        os.system('python3 buy_realty_without_building.py %s %s' % (landName, str(playerList[self.nowPlayerNum].cash)))
                     f1.close()
                     #break
 
@@ -250,19 +289,47 @@ class Home(QtGui.QMainWindow):
                         playerList[self.nowPlayerNum].add_num_of_building(landName, self.selectedNumOfBuilding)
                         playerList[self.nowPlayerNum].cash -= int(totalPrice)
                         playerList[self.nowPlayerNum].realtyValue += int(totalPrice)
-                        #print(playerList[self.nowPlayerNum].cash)
-                    '''
+
                     print('buyFlag : ', buyFlag)
                     print('선택한 건물 :', self.selectedNumOfBuilding)
                     print('플레이어 소유 건물 : ', playerList[self.nowPlayerNum].numOfBuilding)
                     print('해당 토지 세워진 건물 : ', RealtyInfo.realtyBuildingNum[landName], end='\n\n')
-                    '''
+
                     self.edtBarcodeInfo.setText('')
                     self.lblNowPlayerCash.setText('￦ %s' % str(playerList[self.nowPlayerNum].cash))
                     self.lblNowPlayerRealtyValue.setText('￦ %s' % str(playerList[self.nowPlayerNum].realtyValue))
-                    # print(playerList[self.nowPlayerNum].realtyValue)
 
                     break
+
+    # 현재 플레이어 자산 모두 파산 처리
+    def goBankrupt(self):
+        landNameColumn = 2
+        f = open('realty_info.csv', 'r')
+        csvReader = csv.reader(f)
+
+        # 현재 플레이어의 부동산 모두 무소유로 초기화
+        for row in csvReader:
+            if RealtyInfo.realtyOwner[row[landNameColumn]] == playerList[self.nowPlayerNum].nameCode :
+                RealtyInfo.realtyOwner[row[landNameColumn]] = ''
+                # 건물 개수 초기화
+                '''
+                for buildingType in list(RealtyInfo.realtyBuildingNum[row[landNameColumn]].keys()):
+                    RealtyInfo.realtyBuildingNum[buildingType] = 0
+                    print(buildingType)
+                    print(RealtyInfo.realtyBuildingNum[row[landNameColumn]], end='\n\n')
+                '''
+                RealtyInfo.realtyBuildingNum[row[landNameColumn]]['land'] = 0
+                RealtyInfo.realtyBuildingNum[row[landNameColumn]]['villa'] = 0
+                RealtyInfo.realtyBuildingNum[row[landNameColumn]]['building'] = 0
+                RealtyInfo.realtyBuildingNum[row[landNameColumn]]['hotel'] = 0
+
+                print('%s 파산 완료' % playerList[self.nowPlayerNum].name)
+                print('파산된 토지 : ', row[landNameColumn])
+                print('파산된 토지 결과 : ', RealtyInfo.realtyBuildingNum[row[landNameColumn]], end='\n\n')
+        bankruptPlayerNum.append(self.nowPlayerNum)   # 현재 플레이어 인덱스 파산 플레이어로 저장
+        self.change_turn()  # 턴 바꾸기
+        self.edtBarcodeInfo.setText('') # 바코드 입력 박스 초기화
+        f.close()
 
 # window background class
 class Board(QtGui.QFrame):

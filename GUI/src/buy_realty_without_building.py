@@ -67,18 +67,25 @@ class BuyRealtyWithoutBuilding(QtGui.QMainWindow):
     def cancel_buy(self):
         selectedNumOfBuilding['land'] = 0
         buyFlag = 0
+        totalPrice = 0
         f = open('selected_num_of_building.dat', 'wb')
         pickle.dump(selectedNumOfBuilding, f)
         pickle.dump(buyFlag, f)
+        pickle.dump(totalPrice, f)
         f.close()
 
         sys.exit()
 
     # 구매 버튼 클릭 이벤트 method
     def pay_money(self, landPrice):
+        nowCash = int(sys.argv[2])
+        totalPrice = self.lblPrice.text()[2:]
+        print(totalPrice)
+        if nowCash < int(totalPrice):
+            os.system('python3 cannot_buy_realty.py %s %s' % (totalPrice, str(nowCash)))
+            return
         # 토지 수량 증가시키기
         selectedNumOfBuilding['land'] = 1
-        totalPrice = self.lblPrice.text()[2:0]
         buyFlag = 1
         f = open('selected_num_of_building.dat', 'wb')
         pickle.dump(selectedNumOfBuilding, f)
