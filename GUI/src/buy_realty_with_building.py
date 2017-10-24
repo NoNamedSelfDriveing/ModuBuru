@@ -220,10 +220,15 @@ class BuyRealtyWithBuilding(QtGui.QMainWindow):
 
     # 구매 버튼(OK) 버튼 클릭 이벤트 method
     def pay_money(self):
+        nowCash = int(sys.argv[2])
         checkBoxList = [self.chkLand, self.chkVilla1, self.chkVilla2, self.chkBuilding, self.chkHotel]
         selectedNumOfBuilding = {'land' : 0, 'villa' : 0, 'building' : 0, 'hotel' : 0}
         totalPrice = self.lblPrice.text()[2:]
         buyFlag = 0
+
+        if nowCash < int(totalPrice):
+            os.system('python3 cannot_buy_realty.py %s %s' % (totalPrice, str(nowCash)))
+            return
 
         # 토지 및 건물 구매했는지 안했는지 flag 설정하기
         for buildingType in list(selectedNumOfBuilding.keys()):
