@@ -4,6 +4,13 @@
  * Created: 2017-10-25 13:50:16
  * Author : Skj
  */ 
+
+/*
+*	ÇÉ ¿¬°á ¹æ¹ý
+*	ATmega128 PE0(RX0) - Arduino Digital 1(TX)
+*	ATmega128 PE1(TX0) - Arduino Digital 0(RX)
+*/.
+
 #define F_CPU 16000000
 
 #include <avr/io.h>
