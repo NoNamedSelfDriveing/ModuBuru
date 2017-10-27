@@ -5,8 +5,8 @@ import Adafruit_TCS34725 as TCS
 
 class ComAVR:
     def __init__(self):
-        #self.srl = serial.Serial('/dev/ttyUSB0')
-        #self.srl.baudrate = 19200
+        self.srl = serial.Serial('/dev/ttyUSB0')
+        self.srl.baudrate = 19200
         self.tcs = TCS.TCS34725()
         self.tcs.set_interrupt(False)
 
@@ -42,7 +42,7 @@ class ComAVR:
             temp = TCS.calculate_color_temperature(r, g, b)
             if temp in range(27000, 34000) and r < 140:
                 print('Nope', temp, r)
-                #srl.write(b'0')
+                srl.write(b'MI0')
                 pass
             else:
                 while True:
@@ -55,7 +55,7 @@ class ComAVR:
                             pass
                         else:
                             isInputting = True
-                        #srl.write(b'1')
+                        srl.write(b'MI1')
                         nlist[0] += 1
                     # 10000
                     elif temp in range(500000, 5000000):
@@ -63,7 +63,7 @@ class ComAVR:
                             pass
                         else:
                             isInputting = True
-                        #srl.write(b'2')
+                        srl.write(b'MI2')
                         nlist[1] += 1
                     # 20000
                     elif temp in range(12000, 20000):
@@ -71,7 +71,7 @@ class ComAVR:
                             pass
                         else:
                             isInputting = True
-                        #srl.write(b'3')
+                        srl.write(b'MI3')
                         nlist[2] += 1
                     # 50000
                     elif temp in range(23000, 30000) and r > 200:
@@ -79,7 +79,7 @@ class ComAVR:
                             pass
                         else:
                             isinputting = True
-                        #srl.write(b'4')
+                        srl.write(b'MI4')
                         nlist[3] += 1
                     # 100000
                     elif temp in range(130000, 310000):
@@ -87,7 +87,7 @@ class ComAVR:
                             pass
                         else:
                             isInputting = True
-                        #srl.write(b'5')
+                        srl.write(b'MI5')
                         nlist[4] += 1
                     # 500000
                     elif temp < -10000:
@@ -95,7 +95,7 @@ class ComAVR:
                             pass
                         else:
                             isInputting = True
-                        #srl.write(b'6')
+                        srl.write(b'MI6')
                         nlist[5] += 1
                     elif temp in range(27000, 34000) and r > 140:
                         pass
@@ -122,29 +122,26 @@ class ComAVR:
 
     # Give money to player
     def give_banknote(self, money):
-        self.srl.write(b'M')
-        self.srl.write(b'O')
-
         cash = money
 
         while cash > 0:
             if cash / 500000 > 0:
-                self.srl.write(b'6')
+                self.srl.write(b'MO6')
                 cash -= 500000
             elif cash / 100000 > 0:
-                self.srl.write(b'5')
+                self.srl.write(b'MO5')
                 cash -= 100000
             elif cash / 50000 > 0:
-                self.srl.write(b'4')
+                self.srl.write(b'MO4')
                 cash -= 50000
             elif cash / 20000 > 0:
-                self.srl.write(b'3')
+                self.srl.write(b'MO3')
                 cash -= 20000
             elif cash / 10000 > 0:
-                self.srl.write(b'2')
+                self.srl.write(b'MO2')
                 cash -= 10000
             elif cash / 5000 > 0:
-                self.srl.write(b'1')
+                self.srl.write(b'MO1')
                 cash -= 5000
 
             while chr(ord(srl.read(1))) != 'F':
@@ -152,8 +149,6 @@ class ComAVR:
 
     # Return change to player
     def give_change(self, money):
-        self.srl.write(b'M')
-        self.srl.write(b'O')
         self.give_banknote(money)
        
     def move_buildings_pane(self):
