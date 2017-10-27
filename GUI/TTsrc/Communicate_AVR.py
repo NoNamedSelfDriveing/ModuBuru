@@ -154,7 +154,3 @@ class ComAVR:
     def move_buildings_pane(self):
         self.srl.write(b'B')
 
-    '''
-
-a = ComAVR()
-a.get_banknote(35000)
