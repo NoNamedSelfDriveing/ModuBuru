@@ -7,8 +7,6 @@ class ComAVR:
     def __init__(self):
         self.srl = serial.Serial('/dev/ttyUSB0')
         self.srl.baudrate = 19200
-        self.tcs = TCS.TCS34725()
-        self.tcs.set_interrupt(False)
 
     # Rotate banknote pane
     def move_banknote_pane(self, bntype):
