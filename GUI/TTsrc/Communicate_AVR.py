@@ -90,7 +90,7 @@ class ComAVR:
                         
                         srl.write(b'MI5')
                         while(chr(ord(srl.read(1))) != 'F'):
-                            pass
+                            nlist[4] += 1
                         
                         nlist[4] += 1
                     # 500000
@@ -102,7 +102,7 @@ class ComAVR:
                         
                         srl.write(b'MI6')
                         while(chr(ord(srl.read(1))) != 'F'):
-                            pass
+                            nlist[5] += 1
                         
                         nlist[5] += 1
                     elif temp in range(27000, 34000) and r > 140:
