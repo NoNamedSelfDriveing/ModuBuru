@@ -178,7 +178,7 @@ class Home(QtGui.QMainWindow):
 
         # 테스트!!!!!
         #테스트!!
-        playerList[0].cash = 50000
+        #playerList[0].cash = 50000
 
     # Next Turn 버튼 클릭 이벤트 method
     def change_turn(self):
