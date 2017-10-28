@@ -126,6 +126,8 @@ class ComAVR:
         
         '''
         srl.write(b'MI')
+        while(chr(ord(srl.read(1))) != 'F'):
+            pass
         # Return Cash
         print(cash)
         self.give_change(-cash)
