@@ -80,4 +80,4 @@ run()
 
 cavr = ComAVR.ComAVR()
 cavr.get_banknote(100000)
-sys.exit()
+#sys.exit()
