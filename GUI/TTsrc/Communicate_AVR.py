@@ -29,8 +29,8 @@ class ComAVR:
 
     # Get banknotes from player
     def get_banknote(self, money):
-        srl.write(b'M')
-        srl.write(b'I')
+        self.srl.write(b'M')
+        self.srl.write(b'I')
         while(chr(ord(srl.read(1))) != 'F'):
             pass
         # Return Cash
