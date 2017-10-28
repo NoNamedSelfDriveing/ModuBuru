@@ -57,7 +57,7 @@ class GiveInitialMoney(QtGui.QMainWindow):
             10000 : 2
             5000 : 1
             '''
-
+            '''
             # Give banknote routine
             cash_temp = personalInitialCash
 
@@ -95,7 +95,7 @@ class GiveInitialMoney(QtGui.QMainWindow):
                     self.srl.write(b'1')
                     while chr(ord(self.srl.read(1))) == 'F':
                         pass
-
+            '''
             '''
                 하드웨어 측에서 인출 작업 수행
             '''
