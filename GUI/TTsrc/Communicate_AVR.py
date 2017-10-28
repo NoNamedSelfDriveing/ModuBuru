@@ -35,6 +35,8 @@ class ComAVR:
         n_money = 0
         isInputting = False
         nlist = [0, 0, 0, 0, 0, 0]
+        
+        '''
         money_list = [5000, 10000, 20000, 50000, 100000, 500000]
 
         while cash > 0:
@@ -124,6 +126,8 @@ class ComAVR:
                             isInputting = False
                         break
         
+        '''
+        srl.write(b'MI')
         # Return Cash
         print(cash)
         self.give_change(-cash)
